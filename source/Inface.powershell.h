@@ -26,6 +26,8 @@ bool unzip_file(const std::string &zip_file, const std::string &output_dir)
     auto res = exec_powershell(command, response);
     if (!res)
         return false;
+    // remove zip file
+    DeleteFileA(zip_file.c_str());
     return true;
 }
 
