@@ -108,6 +108,19 @@ struct inface
             return 0;
         return auto_init_impl_func();
     }
+
+    std::string get_error_define(int index)
+    {
+        auto alloc_res = alloc_string();
+        auto get_error_define_res = get_error_define(index, alloc_res);
+        auto get_string_length_res = get_string_length(alloc_res);
+        char buffer[1024];
+        memset(buffer, 0, sizeof(buffer));
+        auto get_string_context_res = get_string_context(alloc_res, buffer, sizeof(buffer));
+        std::string result = buffer;
+        free_string(alloc_res);
+        return result;
+    }
 };
 
 bool init()
@@ -135,7 +148,6 @@ int main()
         std::cout << "inface is invalid" << std::endl;
         return 0;
     }
-    std::cout << "inface is valid" << std::endl;
 
     auto alloc_res = inface.alloc_string();
     if (alloc_res == nullptr)
@@ -143,24 +155,20 @@ int main()
         std::cout << "alloc_res is nullptr" << std::endl;
         return 0;
     }
-    std::cout << "alloc_res is not nullptr" << std::endl;
     int error_define_count = inface.get_error_define_count();
     std::cout << "error_define_count: " << error_define_count << std::endl;
     for (int i = 0; i < error_define_count; i++)
     {
-        auto alloc_res = inface.alloc_string();
-        auto get_error_define_res = inface.get_error_define(i, alloc_res);
-        auto get_string_length_res = inface.get_string_length(alloc_res);
-        char buffer[1024];
-        memset(buffer, 0, sizeof(buffer));
-        auto get_string_context_res = inface.get_string_context(alloc_res, buffer, sizeof(buffer));
-        std::cout << "buffer: " << buffer << std::endl;
-
-        inface.free_string(alloc_res);
+        std::cout << "error_define[" << i << "]: " << inface.get_error_define(i) << std::endl;
     }
 
     auto init_res = inface.auto_init_impl();
     std::cout << "init_res: " << init_res << std::endl;
+    if (init_res != 0)
+    {
+        std::cout << "init failed: " << inface.get_error_define(init_res) << std::endl;
+        return 0;
+    }
 
     return 0;
 }
