@@ -24,7 +24,14 @@ extern "C"
 
     // string alloc and free
     CVAUTOTRACE_INFACE_API inface_string_ptr alloc_string();
+    CVAUTOTRACE_INFACE_API int get_string_length(inface_string_ptr str);
+    CVAUTOTRACE_INFACE_API int get_string_context(inface_string_ptr str, char *buffer, int buffer_size);
     CVAUTOTRACE_INFACE_API void free_string(inface_string_ptr str);
+
+    // error code
+    CVAUTOTRACE_INFACE_API int get_last_error();
+    CVAUTOTRACE_INFACE_API int get_error_define_count();
+    CVAUTOTRACE_INFACE_API int get_error_define(int index, inface_string_ptr result);
 
     // check cvAutoTrace.dll is valid
     CVAUTOTRACE_INFACE_API bool check_impl_valid();
@@ -34,8 +41,7 @@ extern "C"
     CVAUTOTRACE_INFACE_API void set_callback(void *callback);
 
     // proxy for cvAutoTrace.dll
-    CVAUTOTRACE_INFACE_API bool api(const char *json, char *result, int size);
-    CVAUTOTRACE_INFACE_API bool api_alloc(const char *json, inface_string_ptr result);
+    CVAUTOTRACE_INFACE_API bool api(const char *json, inface_string_ptr result);
 
 #if __cplusplus
 }
