@@ -4,6 +4,7 @@
 #include "Inface.powershell.h"
 #include "Inface.library.h"
 #include "errdef.h"
+#include "string.match.h"
 
 int get_last_error()
 {
@@ -38,6 +39,19 @@ bool check_impl_valid()
     return true;
 }
 
+int auto_init_impl_v7(std::string download_url)
+{
+    auto download_res = download_file(download_url, "cvAutoTrack.zip");
+    if (!download_res)
+        return error("download cvAutoTrack.dll failed");
+    auto unzip_res = unzip_file("cvAutoTrack.zip", ".");
+    if (!unzip_res)
+        return error("unzip cvAutoTrack.dll failed");
+    auto check_res = check_impl_valid();
+    if (!check_res)
+        return error("check cvAutoTrack.dll failed");
+}
+
 int auto_init_impl()
 {
     if (check_impl_valid())
@@ -56,16 +70,14 @@ int auto_init_impl()
     if (!download_version_res)
         return error("get download version failed");
 
-    auto download_res = download_file(download_url, "cvAutoTrack.zip");
-    if (!download_res)
-        return error("download cvAutoTrack.dll failed");
-    auto unzip_res = unzip_file("cvAutoTrack.zip", ".");
-    if (!unzip_res)
-        return error("unzip cvAutoTrack.dll failed");
-    auto check_res = check_impl_valid();
-    if (!check_res)
-        return error("check cvAutoTrack.dll failed");
-
+    if (match(download_version, "7\\.\\d+\\.\\d+"))
+    {
+        auto auto_init_impl_res = auto_init_impl_v7(download_url);
+    }
+    else
+    {
+        return error("cvAutoTrack.dll version not support");
+    }
     return 0;
 }
 // set callback
