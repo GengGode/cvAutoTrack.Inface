@@ -50,6 +50,26 @@ int auto_init_impl_v7(std::string download_url)
     auto check_res = check_impl_valid();
     if (!check_res)
         return error("check cvAutoTrack.dll failed");
+    return 0;
+}
+
+int auto_init_impl_v8(std::string download_url)
+{
+    std::string download_depends;
+    auto download_depends_res = get_response("https://download.api.weixitianli.com/cvAutoTrack/Depends", download_depends);
+    if (!download_depends_res)
+        return error("get download depends failed");
+
+    auto download_res = download_file(download_url, "cvAutoTrack.zip");
+    if (!download_res)
+        return error("download cvAutoTrack.dll failed");
+    auto unzip_res = unzip_file("cvAutoTrack.zip", ".");
+    if (!unzip_res)
+        return error("unzip cvAutoTrack.dll failed");
+    auto check_res = check_impl_valid();
+    if (!check_res)
+        return error("check cvAutoTrack.dll failed");
+    return 0;
 }
 
 int auto_init_impl()
@@ -72,13 +92,13 @@ int auto_init_impl()
 
     if (match(download_version, "7\\.\\d+\\.\\d+"))
     {
-        auto auto_init_impl_res = auto_init_impl_v7(download_url);
+        return auto_init_impl_v7(download_url);
     }
-    else
+    else if (match(download_version, "8\\.\\d+\\.\\d+"))
     {
-        return error("cvAutoTrack.dll version not support");
+        return auto_init_impl_v8(download_url);
     }
-    return 0;
+    return error("cvAutoTrack.dll version not support");
 }
 // set callback
 void set_callback(void *callback)
