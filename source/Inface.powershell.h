@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <string>
 
-bool exec_powershell(const std::string &command, std::string &response)
+inline bool exec_powershell(const std::string &command, std::string &response)
 {
     auto command_line = "powershell -Command \"" + command + "\"";
     auto fp = _popen(command_line.c_str(), "r");
@@ -19,7 +19,7 @@ bool exec_powershell(const std::string &command, std::string &response)
     return true;
 }
 
-bool unzip_file(const std::string &zip_file, const std::string &output_dir)
+inline bool unzip_file(const std::string &zip_file, const std::string &output_dir)
 {
     std::string command = "Expand-Archive -Path " + zip_file + " -DestinationPath " + output_dir;
     std::string response;

@@ -4,14 +4,44 @@
 #include <Windows.h>
 #include <string>
 
-auto load_impl(const std::string &path)
+class global
+{
+public:
+    inline static HINSTANCE library = nullptr;
+};
+
+inline auto load_impl(const std::string &path)
 {
     return LoadLibraryA(path.c_str());
 }
 
-bool free_impl(HMODULE handle)
+inline bool free_impl(HMODULE handle)
 {
     return FreeLibrary(handle);
+}
+
+inline auto get_global_handle()
+{
+    return global::library;
+}
+
+inline bool try_load_impl(const std::string &path)
+{
+    global::library = load_impl(path);
+    return global::library != nullptr;
+}
+
+inline bool auto_load_impl(const std::string &path, bool is_reload = false)
+{
+    if (is_reload && global::library != nullptr)
+        free_impl(global::library);
+    if (global::library != nullptr)
+        return true;
+    if (try_load_impl(path))
+        return true;
+    if (try_load_impl("cvAutoTrack.dll"))
+        return true;
+    return false;
 }
 
 #endif // __INFACE_LIBRARY_H__

@@ -4,19 +4,19 @@
 #include <windows.h>
 #include <string>
 
-bool dowload_vaild()
+inline bool dowload_vaild()
 {
     return system("curl --version");
 }
 
-bool download_file(const std::string &url, const std::string &path)
+inline bool download_file(const std::string &url, const std::string &path)
 {
     auto command = "curl -L -o " + path + " " + url;
     auto ret = system(command.c_str());
     return ret == 0;
 }
 
-bool get_response(const std::string &url, std::string &response)
+inline bool get_response(const std::string &url, std::string &response)
 {
     auto command = "curl " + url;
     auto fp = _popen(command.c_str(), "r");

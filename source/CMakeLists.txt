@@ -5,5 +5,9 @@ target_sources(cvAutoTrack.Inface
 INTERFACE
         ${inface_INCLUDE_DIR}/cvAutoTrack.Inface.h
 PRIVATE
-        cvAutoTrack.Inface.cpp
+        module.error.cpp
+        module.impl.cpp
+        module.inface.cpp
+        module.string.cpp
 )
+

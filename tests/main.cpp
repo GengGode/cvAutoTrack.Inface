@@ -7,9 +7,9 @@
 
 bool init()
 {
-
-    std::shared_ptr<FILE> fp_ptr(fopen("cvAutoTrack.Inface.dll", "rb"), [](FILE *fp)
-                                 { fclose(fp); });
+    auto fp = fopen("cvAutoTrack.Inface.dll", "rb");
+    std::shared_ptr<FILE> fp_ptr(fp, [](FILE *fp)
+                                 { if(fp)fclose(fp); });
     if (fp_ptr == nullptr)
     {
         std::cout << "cvAutoTrack.Inface.dll not found" << std::endl;
@@ -51,6 +51,10 @@ int main()
         std::cout << "init failed: " << inface.get_error_define(init_res) << std::endl;
         return 0;
     }
+    double x, y, a;
+    int mapId;
+    auto get_transform_of_map_res = inface.GetTransformOfMap(x, y, a, mapId);
+    std::cout << "get_transform_of_map_res: " << get_transform_of_map_res << std::endl;
 
     return 0;
 }

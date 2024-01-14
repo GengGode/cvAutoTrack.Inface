@@ -45,6 +45,14 @@ extern "C"
     // proxy for cvAutoTrace.dll
     CVAUTOTRACE_INFACE_API bool api(const char *json, inface_string_ptr result);
 
+    CVAUTOTRACE_INFACE_API bool GetTransformOfMap(double &x, double &y, double &a, int &mapId);
+    CVAUTOTRACE_INFACE_API bool GetPositionOfMap(double &x, double &y, int &mapId);
+    CVAUTOTRACE_INFACE_API bool GetDirection(double &a);
+    CVAUTOTRACE_INFACE_API bool GetRotation(double &a);
+    CVAUTOTRACE_INFACE_API bool GetStar(double &x, double &y, bool &isEnd);
+    CVAUTOTRACE_INFACE_API bool GetStarJson(char *json_buff, int buff_size);
+    CVAUTOTRACE_INFACE_API bool GetUID(int &uid);
+    CVAUTOTRACE_INFACE_API bool GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
 #if __cplusplus
 }
 #endif
@@ -69,6 +77,15 @@ typedef int (*get_error_define_t)(int index, inface_string_ptr result);
 typedef bool (*check_impl_valid_t)();
 typedef int (*auto_init_impl_t)();
 
+typedef bool (*GetTransformOfMap_t)(double &x, double &y, double &a, int &mapId);
+typedef bool (*GetPositionOfMap_t)(double &x, double &y, int &mapId);
+typedef bool (*GetDirection_t)(double &a);
+typedef bool (*GetRotation_t)(double &a);
+typedef bool (*GetStar_t)(double &x, double &y, bool &isEnd);
+typedef bool (*GetStarJson_t)(char *json_buff, int buff_size);
+typedef bool (*GetUID_t)(int &uid);
+typedef bool (*GetAllInfo_t)(double &x, double &y, int &mapId, double &a, double &r, int &uid);
+
 struct inface
 {
     HMODULE lib;
@@ -83,6 +100,15 @@ struct inface
     get_error_define_t get_error_define_func;
     check_impl_valid_t check_impl_valid_func;
     auto_init_impl_t auto_init_impl_func;
+
+    GetTransformOfMap_t GetTransformOfMap_func;
+    GetPositionOfMap_t GetPositionOfMap_func;
+    GetDirection_t GetDirection_func;
+    GetRotation_t GetRotation_func;
+    GetStar_t GetStar_func;
+    GetStarJson_t GetStarJson_func;
+    GetUID_t GetUID_func;
+    GetAllInfo_t GetAllInfo_func;
 
     inface(std::string path = "cvAutoTrack.Inface.dll")
     {
@@ -100,6 +126,15 @@ struct inface
         get_error_define_func = (get_error_define_t)GetProcAddress(lib, "get_error_define");
         check_impl_valid_func = (check_impl_valid_t)GetProcAddress(lib, "check_impl_valid");
         auto_init_impl_func = (auto_init_impl_t)GetProcAddress(lib, "auto_init_impl");
+
+        GetTransformOfMap_func = (GetTransformOfMap_t)GetProcAddress(lib, "GetTransformOfMap");
+        GetPositionOfMap_func = (GetPositionOfMap_t)GetProcAddress(lib, "GetPositionOfMap");
+        GetDirection_func = (GetDirection_t)GetProcAddress(lib, "GetDirection");
+        GetRotation_func = (GetRotation_t)GetProcAddress(lib, "GetRotation");
+        GetStar_func = (GetStar_t)GetProcAddress(lib, "GetStar");
+        GetStarJson_func = (GetStarJson_t)GetProcAddress(lib, "GetStarJson");
+        GetUID_func = (GetUID_t)GetProcAddress(lib, "GetUID");
+        GetAllInfo_func = (GetAllInfo_t)GetProcAddress(lib, "GetAllInfo");
     }
     ~inface()
     {
@@ -160,6 +195,62 @@ struct inface
         if (auto_init_impl_func == nullptr)
             return 0;
         return auto_init_impl_func();
+    }
+
+    bool GetTransformOfMap(double &x, double &y, double &a, int &mapId)
+    {
+        if (GetTransformOfMap_func == nullptr)
+            return false;
+        return GetTransformOfMap_func(x, y, a, mapId);
+    }
+
+    bool GetPositionOfMap(double &x, double &y, int &mapId)
+    {
+        if (GetPositionOfMap_func == nullptr)
+            return false;
+        return GetPositionOfMap_func(x, y, mapId);
+    }
+
+    bool GetDirection(double &a)
+    {
+        if (GetDirection_func == nullptr)
+            return false;
+        return GetDirection_func(a);
+    }
+
+    bool GetRotation(double &a)
+    {
+        if (GetRotation_func == nullptr)
+            return false;
+        return GetRotation_func(a);
+    }
+
+    bool GetStar(double &x, double &y, bool &isEnd)
+    {
+        if (GetStar_func == nullptr)
+            return false;
+        return GetStar_func(x, y, isEnd);
+    }
+
+    bool GetStarJson(char *json_buff, int buff_size)
+    {
+        if (GetStarJson_func == nullptr)
+            return false;
+        return GetStarJson_func(json_buff, buff_size);
+    }
+
+    bool GetUID(int &uid)
+    {
+        if (GetUID_func == nullptr)
+            return false;
+        return GetUID_func(uid);
+    }
+
+    bool GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid)
+    {
+        if (GetAllInfo_func == nullptr)
+            return false;
+        return GetAllInfo_func(x, y, mapId, a, r, uid);
     }
 
     std::string get_error_define(int index)

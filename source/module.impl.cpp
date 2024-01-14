@@ -1,27 +1,9 @@
 #include "cvAutoTrack.Inface.h"
-#include "Inface.define.h"
+#include "string.match.h"
+#include "Inface.regerr.h"
+#include "Inface.library.h"
 #include "Inface.network.h"
 #include "Inface.powershell.h"
-#include "Inface.library.h"
-#include "errdef.h"
-#include "string.match.h"
-
-int get_last_error()
-{
-    return 0;
-}
-int get_error_define_count()
-{
-    return ErrorInvoker::m_locations.size();
-}
-int get_error_define(int index, inface_string_ptr result)
-{
-    if (index < 0 || index >= ErrorInvoker::m_locations.size())
-        return error("error index out of range");
-    auto &location = ErrorInvoker::m_locations[index];
-    result->context = location.m_path + ":" + std::to_string(location.m_lineno) + ":" + std::to_string(location.m_colno) + " " + location.m_errmsg;
-    return 0;
-}
 
 // check cvAutoTrack.dll is valid
 bool check_impl_valid()
@@ -31,7 +13,6 @@ bool check_impl_valid()
     if (fp == nullptr)
         return false;
     fclose(fp);
-    // auto version = get_impl_version();
     auto handle = load_impl("cvAutoTrack.dll");
     if (handle == nullptr)
         return false;
@@ -50,6 +31,9 @@ int auto_init_impl_v7(std::string download_url)
     auto check_res = check_impl_valid();
     if (!check_res)
         return error("check cvAutoTrack.dll failed");
+    auto load_res = auto_load_impl("cvAutoTrack.dll", true);
+    if (!load_res)
+        return error("load cvAutoTrack.dll failed");
     return 0;
 }
 
@@ -69,13 +53,23 @@ int auto_init_impl_v8(std::string download_url)
     auto check_res = check_impl_valid();
     if (!check_res)
         return error("check cvAutoTrack.dll failed");
+
+    // auto depends = split(download_depends, "\n");
+    auto load_res = auto_load_impl("cvAutoTrack.dll", true);
+    if (!load_res)
+        return error("load cvAutoTrack.dll failed");
     return 0;
 }
 
 int auto_init_impl()
 {
     if (check_impl_valid())
+    {
+        auto load_res = auto_load_impl("cvAutoTrack.dll");
+        if (!load_res)
+            return error("load cvAutoTrack.dll failed");
         return 0;
+    }
 
     std::string download_url;
     auto download_url_res = get_response("https://download.api.weixitianli.com/cvAutoTrack/downloadUrl", download_url);
@@ -90,24 +84,15 @@ int auto_init_impl()
     if (!download_version_res)
         return error("get download version failed");
 
-    if (match(download_version, "7\\.\\d+\\.\\d+"))
+    switch (parse_major_version(download_version))
     {
+    case 6:
+        return error("cvAutoTrack.dll version so old");
+    case 7:
         return auto_init_impl_v7(download_url);
-    }
-    else if (match(download_version, "8\\.\\d+\\.\\d+"))
-    {
+    case 8:
         return auto_init_impl_v8(download_url);
+    default:
+        return error("cvAutoTrack.dll version not support");
     }
-    return error("cvAutoTrack.dll version not support");
-}
-// set callback
-void set_callback(void *callback)
-{
-}
-
-// proxy for cvAutoTrack.dll
-
-bool api(const char *json, inface_string_ptr result)
-{
-    return false;
 }

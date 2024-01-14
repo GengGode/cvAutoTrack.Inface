@@ -1,3 +1,5 @@
+#ifndef __INFACE_REGERR_H__
+#define __INFACE_REGERR_H__
 #include <cstdio>
 #include <set>
 #include <vector>
@@ -61,7 +63,7 @@ public:
     }
 };
 
-int error_impl(const char *sz)
+inline int error_impl(const char *sz)
 {
     int index = 0;
     for (auto &[_, __, ___, errmsg] : ErrorInvoker::m_locations)
@@ -75,7 +77,7 @@ int error_impl(const char *sz)
 
 #define error(msg) BadFucker<ErrorInvoker, SourceLocation(__FILE__, std::source_location::current().line(), std::source_location::current().column()), ErrorMessage(msg)>::callback(error_impl, msg)
 
-std::set<std::string> get_all_error_info()
+inline std::set<std::string> get_all_error_info()
 {
     std::set<std::string> all_error_info;
     for (auto &[_, __, ___, errmsg] : ErrorInvoker::m_locations)
@@ -84,3 +86,5 @@ std::set<std::string> get_all_error_info()
     }
     return all_error_info;
 }
+
+#endif
