@@ -1,6 +1,13 @@
 #include "cvAutoTrack.Inface.h"
 #include "Inface.library.h"
 
+
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
+#define GetProcAddress GetProcAddress
+#else
+#define GetProcAddress dlsym
+#endif
+
 bool GetTransformOfMap(double &x, double &y, double &a, int &mapId)
 {
     auto func = (decltype(&GetTransformOfMap))GetProcAddress(get_global_handle(), "GetTransformOfMap");

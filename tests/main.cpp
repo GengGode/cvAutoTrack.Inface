@@ -1,18 +1,24 @@
 
 
 #include <iostream>
-#include <Windows.h>
+
 #define explicit_link
 #include <cvAutoTrack.Inface.h>
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
+#define lib_name "cvAutoTrack.Inface.dll"
+#else
+#define lib_name "libcvAutoTrack.Inface.so"
+#endif
 bool init()
 {
-    auto fp = fopen("cvAutoTrack.Inface.dll", "rb");
+    
+    auto fp = fopen(lib_name, "rb");
     std::shared_ptr<FILE> fp_ptr(fp, [](FILE *fp)
                                  { if(fp)fclose(fp); });
     if (fp_ptr == nullptr)
     {
-        std::cout << "cvAutoTrack.Inface.dll not found" << std::endl;
+        std::cout << lib_name " not found" << std::endl;
         return 0;
     }
     return 1;
@@ -24,7 +30,7 @@ int main()
         return 0;
     std::cout << "init success" << std::endl;
 
-    inface inface;
+    inface inface(lib_name);
     if (!inface.is_valid)
     {
         std::cout << "inface is invalid" << std::endl;

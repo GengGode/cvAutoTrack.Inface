@@ -60,7 +60,11 @@ extern "C"
 #else // explicit_link
 
 #include <string>
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
 #include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
 #include <memory>
 #include <functional>
 
@@ -88,7 +92,11 @@ typedef bool (*GetAllInfo_t)(double &x, double &y, int &mapId, double &a, double
 
 struct inface
 {
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
     HMODULE lib;
+#else
+    void *lib;
+#endif
     bool is_valid = false;
 
     alloc_string_t alloc_string_func;
@@ -112,11 +120,16 @@ struct inface
 
     inface(std::string path = "cvAutoTrack.Inface.dll")
     {
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
         lib = LoadLibrary(path.c_str());
+#else
+        lib = dlopen(path.c_str(), RTLD_LAZY);
+#endif
         if (lib == nullptr)
             return;
         is_valid = true;
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
         alloc_string_func = (alloc_string_t)GetProcAddress(lib, "alloc_string");
         get_string_length_func = (get_string_length_t)GetProcAddress(lib, "get_string_length");
         get_string_context_func = (get_string_context_t)GetProcAddress(lib, "get_string_context");
@@ -135,11 +148,35 @@ struct inface
         GetStarJson_func = (GetStarJson_t)GetProcAddress(lib, "GetStarJson");
         GetUID_func = (GetUID_t)GetProcAddress(lib, "GetUID");
         GetAllInfo_func = (GetAllInfo_t)GetProcAddress(lib, "GetAllInfo");
+#else
+        alloc_string_func = (alloc_string_t)dlsym(lib, "alloc_string");
+        get_string_length_func = (get_string_length_t)dlsym(lib, "get_string_length");
+        get_string_context_func = (get_string_context_t)dlsym(lib, "get_string_context");
+        free_string_func = (free_string_t)dlsym(lib, "free_string");
+        get_last_error_func = (get_last_error_t)dlsym(lib, "get_last_error");
+        get_error_define_count_func = (get_error_define_count_t)dlsym(lib, "get_error_define_count");
+        get_error_define_func = (get_error_define_t)dlsym(lib, "get_error_define");
+        check_impl_valid_func = (check_impl_valid_t)dlsym(lib, "check_impl_valid");
+        auto_init_impl_func = (auto_init_impl_t)dlsym(lib, "auto_init_impl");
+
+        GetTransformOfMap_func = (GetTransformOfMap_t)dlsym(lib, "GetTransformOfMap");
+        GetPositionOfMap_func = (GetPositionOfMap_t)dlsym(lib, "GetPositionOfMap");
+        GetDirection_func = (GetDirection_t)dlsym(lib, "GetDirection");
+        GetRotation_func = (GetRotation_t)dlsym(lib, "GetRotation");
+        GetStar_func = (GetStar_t)dlsym(lib, "GetStar");
+        GetStarJson_func = (GetStarJson_t)dlsym(lib, "GetStarJson");
+        GetUID_func = (GetUID_t)dlsym(lib, "GetUID");
+        GetAllInfo_func = (GetAllInfo_t)dlsym(lib, "GetAllInfo");
+#endif
     }
     ~inface()
     {
         if (lib != nullptr)
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
             FreeLibrary(lib);
+#else
+            dlclose(lib);
+#endif
     }
 
     inface_string_ptr alloc_string()
