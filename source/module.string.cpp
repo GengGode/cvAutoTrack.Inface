@@ -24,7 +24,7 @@ int get_string_context(inface_string_ptr str, char *buffer, int buffer_size)
     auto length = str->context.length();
     if (length >= buffer_size)
         return 0;
-    memcpy(buffer, str->context.c_str(), length);
+    std::copy(str->context.c_str(), str->context.c_str() + (length > buffer_size ? buffer_size : length), buffer);
     return length;
 }
 
