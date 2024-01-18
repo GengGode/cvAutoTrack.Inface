@@ -1,5 +1,6 @@
 #ifndef __INFACE_LIBRARY_H__
 #define __INFACE_LIBRARY_H__
+
 #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
 #include <Windows.h>
 #else
@@ -7,14 +8,16 @@
 #endif
 #include <string>
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
+#define LibraryHandle HINSTANCE
+#else
+#define LibraryHandle void *
+#endif
+
 class global
 {
 public:
-#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-    inline static HINSTANCE library = nullptr;
-#else
-    inline static void *library = nullptr;
-#endif
+    inline static LibraryHandle library = nullptr;
 };
 
 inline auto load_impl(const std::string &path)
@@ -26,7 +29,7 @@ inline auto load_impl(const std::string &path)
 #endif
 }
 
-inline bool free_impl(void *handle)
+inline bool free_impl(LibraryHandle handle)
 {
 #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
     return FreeLibrary(handle);
