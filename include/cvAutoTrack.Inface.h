@@ -353,8 +353,7 @@ struct inface
         auto alloc_res = alloc_string();
         auto get_task_callback_name_res = get_task_callback_name(index, alloc_res);
         auto get_string_length_res = get_string_length(alloc_res);
-        char buffer[1024];
-        memset(buffer, 0, sizeof(buffer));
+        char buffer[1024] = {0};
         auto get_string_context_res = get_string_context(alloc_res, buffer, sizeof(buffer));
         std::string result = buffer;
         free_string(alloc_res);
