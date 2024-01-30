@@ -1,23 +1,41 @@
 #ifndef __INFACE_LIBRARY_H__
 #define __INFACE_LIBRARY_H__
 
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
 #include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
 #include <string>
+
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
+#define LibraryHandle HINSTANCE
+#else
+#define LibraryHandle void *
+#endif
 
 class global
 {
 public:
-    inline static HINSTANCE library = nullptr;
+    inline static LibraryHandle library = nullptr;
 };
 
 inline auto load_impl(const std::string &path)
 {
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
     return LoadLibraryA(path.c_str());
+#else
+    return dlopen(path.c_str(), RTLD_LAZY);
+#endif
 }
 
-inline bool free_impl(HMODULE handle)
+inline bool free_impl(LibraryHandle handle)
 {
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
     return FreeLibrary(handle);
+#else
+    return dlclose(handle);
+#endif
 }
 
 inline auto get_global_handle()
