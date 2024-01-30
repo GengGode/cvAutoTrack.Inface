@@ -19,6 +19,10 @@ int get_error_define(int index, inface_string_ptr result)
     if (index < 0 || index >= ErrorInvoker::m_locations.size())
         return error("error index out of range");
     auto &location = ErrorInvoker::m_locations[index];
-    result->context = location.m_path + ":" + std::to_string(location.m_lineno) + ":" + std::to_string(location.m_colno) + " " + location.m_errmsg;
+    result->context = std::to_string(index) + ":" +
+#ifdef _DEBUG
+                      location.m_path + ":" + std::to_string(location.m_lineno) + ":" + std::to_string(location.m_colno) + " " +
+#endif
+                      location.m_errmsg;
     return 0;
 }
