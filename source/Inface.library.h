@@ -39,8 +39,6 @@ inline bool auto_load_impl(const std::string &path, bool is_reload = false)
         return true;
     if (try_load_impl(path))
         return true;
-    if (try_load_impl("cvAutoTrack.dll"))
-        return true;
     return false;
 }
 
