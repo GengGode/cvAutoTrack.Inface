@@ -9,5 +9,6 @@ PRIVATE
         module.impl.cpp
         module.inface.cpp
         module.string.cpp
+        module.task.cpp
 )
 

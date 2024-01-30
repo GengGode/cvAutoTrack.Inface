@@ -39,8 +39,15 @@ extern "C"
     CVAUTOTRACE_INFACE_API bool check_impl_valid();
     // get cvAutoTrace.dll version
     CVAUTOTRACE_INFACE_API int auto_init_impl();
-    // set callback
-    CVAUTOTRACE_INFACE_API void set_callback(void *callback);
+
+    // get callback count
+    CVAUTOTRACE_INFACE_API int get_task_callback_count();
+    // get callback name
+    CVAUTOTRACE_INFACE_API int get_task_callback_name(int index, inface_string_ptr result);
+    // install callback
+    CVAUTOTRACE_INFACE_API int install_task_callback(const char *task_name, int (*callback)(const char * /*json*/));
+    // remove callback
+    CVAUTOTRACE_INFACE_API int remove_task_callback(const char *task_name);
 
     // proxy for cvAutoTrace.dll
     CVAUTOTRACE_INFACE_API bool api(const char *json, inface_string_ptr result);
@@ -77,6 +84,11 @@ typedef int (*get_error_define_t)(int index, inface_string_ptr result);
 typedef bool (*check_impl_valid_t)();
 typedef int (*auto_init_impl_t)();
 
+typedef bool (*get_task_callback_count_t)();
+typedef bool (*get_task_callback_name_t)(int index, inface_string_ptr result);
+typedef bool (*install_task_callback_t)(const char *task_name, int (*callback)(const char * /*json*/));
+typedef bool (*remove_task_callback_t)(const char *task_name);
+
 typedef bool (*GetTransformOfMap_t)(double &x, double &y, double &a, int &mapId);
 typedef bool (*GetPositionOfMap_t)(double &x, double &y, int &mapId);
 typedef bool (*GetDirection_t)(double &a);
@@ -100,6 +112,11 @@ struct inface
     get_error_define_t get_error_define_func;
     check_impl_valid_t check_impl_valid_func;
     auto_init_impl_t auto_init_impl_func;
+
+    get_task_callback_count_t get_task_callback_count_func;
+    get_task_callback_name_t get_task_callback_name_func;
+    install_task_callback_t install_task_callback_func;
+    remove_task_callback_t remove_task_callback_func;
 
     GetTransformOfMap_t GetTransformOfMap_func;
     GetPositionOfMap_t GetPositionOfMap_func;
@@ -126,6 +143,11 @@ struct inface
         get_error_define_func = (get_error_define_t)GetProcAddress(lib, "get_error_define");
         check_impl_valid_func = (check_impl_valid_t)GetProcAddress(lib, "check_impl_valid");
         auto_init_impl_func = (auto_init_impl_t)GetProcAddress(lib, "auto_init_impl");
+
+        get_task_callback_count_func = (get_task_callback_count_t)GetProcAddress(lib, "get_task_callback_count");
+        get_task_callback_name_func = (get_task_callback_name_t)GetProcAddress(lib, "get_task_callback_name");
+        install_task_callback_func = (install_task_callback_t)GetProcAddress(lib, "install_task_callback");
+        remove_task_callback_func = (remove_task_callback_t)GetProcAddress(lib, "remove_task_callback");
 
         GetTransformOfMap_func = (GetTransformOfMap_t)GetProcAddress(lib, "GetTransformOfMap");
         GetPositionOfMap_func = (GetPositionOfMap_t)GetProcAddress(lib, "GetPositionOfMap");
@@ -197,6 +219,31 @@ struct inface
         return auto_init_impl_func();
     }
 
+    int get_task_callback_count()
+    {
+        if (get_task_callback_count_func == nullptr)
+            return 0;
+        return get_task_callback_count_func();
+    }
+    int get_task_callback_name(int index, inface_string_ptr result)
+    {
+        if (get_task_callback_name_func == nullptr)
+            return 0;
+        return get_task_callback_name_func(index, result);
+    }
+    int install_task_callback(const char *task_name, int (*callback)(const char * /*json*/))
+    {
+        if (install_task_callback_func == nullptr)
+            return 0;
+        return install_task_callback_func(task_name, callback);
+    }
+    int remove_task_callback(const char *task_name)
+    {
+        if (remove_task_callback_func == nullptr)
+            return 0;
+        return remove_task_callback_func(task_name);
+    }
+
     bool GetTransformOfMap(double &x, double &y, double &a, int &mapId)
     {
         if (GetTransformOfMap_func == nullptr)
@@ -257,6 +304,18 @@ struct inface
     {
         auto alloc_res = alloc_string();
         auto get_error_define_res = get_error_define(index, alloc_res);
+        auto get_string_length_res = get_string_length(alloc_res);
+        char buffer[1024];
+        memset(buffer, 0, sizeof(buffer));
+        auto get_string_context_res = get_string_context(alloc_res, buffer, sizeof(buffer));
+        std::string result = buffer;
+        free_string(alloc_res);
+        return result;
+    }
+    std::string get_task_callback_name(int index)
+    {
+        auto alloc_res = alloc_string();
+        auto get_task_callback_name_res = get_task_callback_name(index, alloc_res);
         auto get_string_length_res = get_string_length(alloc_res);
         char buffer[1024];
         memset(buffer, 0, sizeof(buffer));

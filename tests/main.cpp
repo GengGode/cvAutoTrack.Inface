@@ -43,6 +43,12 @@ int main()
     {
         std::cout << "error_define[" << i << "]: " << inface.get_error_define(i) << std::endl;
     }
+    int task_callback_count = inface.get_task_callback_count();
+    std::cout << "task_callback_count: " << task_callback_count << std::endl;
+    for (int i = 0; i < task_callback_count; i++)
+    {
+        std::cout << "task_callback[" << i << "]: " << inface.get_task_callback_name(i) << std::endl;
+    }
 
     auto init_res = inface.auto_init_impl();
     std::cout << "init_res: " << init_res << std::endl;
