@@ -66,12 +66,20 @@ extern "C"
 
 #else // explicit_link
 
-#include <string>
 #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
 #include <Windows.h>
+#define library_handle_t HMODULE
+#define load_lib(path) LoadLibrary(path.c_str())
+#define free_lib(lib) FreeLibrary(lib)
+#define get_proc(lib, name) GetProcAddress(lib, name)
 #else
 #include <dlfcn.h>
+#define library_handle_t void *
+#define load_lib(path) dlopen(path.c_str(), RTLD_LAZY)
+#define free_lib(lib) dlclose(lib)
+#define get_proc(lib, name) dlsym(lib, name)
 #endif
+#include <string>
 #include <memory>
 #include <functional>
 
@@ -104,11 +112,7 @@ typedef bool (*GetAllInfo_t)(double &x, double &y, int &mapId, double &a, double
 
 struct inface
 {
-#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-    HMODULE lib;
-#else
-    void *lib;
-#endif
+    library_handle_t lib;
     bool is_valid = false;
 
     alloc_string_t alloc_string_func;
@@ -137,68 +141,39 @@ struct inface
 
     inface(std::string path = "cvAutoTrack.Inface.dll")
     {
-#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-        lib = LoadLibrary(path.c_str());
-#else
-        lib = dlopen(path.c_str(), RTLD_LAZY);
-#endif
+        lib = load_lib(path);
         if (lib == nullptr)
             return;
         is_valid = true;
 
-#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-        alloc_string_func = (alloc_string_t)GetProcAddress(lib, "alloc_string");
-        get_string_length_func = (get_string_length_t)GetProcAddress(lib, "get_string_length");
-        get_string_context_func = (get_string_context_t)GetProcAddress(lib, "get_string_context");
-        free_string_func = (free_string_t)GetProcAddress(lib, "free_string");
-        get_last_error_func = (get_last_error_t)GetProcAddress(lib, "get_last_error");
-        get_error_define_count_func = (get_error_define_count_t)GetProcAddress(lib, "get_error_define_count");
-        get_error_define_func = (get_error_define_t)GetProcAddress(lib, "get_error_define");
-        check_impl_valid_func = (check_impl_valid_t)GetProcAddress(lib, "check_impl_valid");
-        auto_init_impl_func = (auto_init_impl_t)GetProcAddress(lib, "auto_init_impl");
+        alloc_string_func = (alloc_string_t)get_proc(lib, "alloc_string");
+        get_string_length_func = (get_string_length_t)get_proc(lib, "get_string_length");
+        get_string_context_func = (get_string_context_t)get_proc(lib, "get_string_context");
+        free_string_func = (free_string_t)get_proc(lib, "free_string");
+        get_last_error_func = (get_last_error_t)get_proc(lib, "get_last_error");
+        get_error_define_count_func = (get_error_define_count_t)get_proc(lib, "get_error_define_count");
+        get_error_define_func = (get_error_define_t)get_proc(lib, "get_error_define");
+        check_impl_valid_func = (check_impl_valid_t)get_proc(lib, "check_impl_valid");
+        auto_init_impl_func = (auto_init_impl_t)get_proc(lib, "auto_init_impl");
 
-        get_task_callback_count_func = (get_task_callback_count_t)GetProcAddress(lib, "get_task_callback_count");
-        get_task_callback_name_func = (get_task_callback_name_t)GetProcAddress(lib, "get_task_callback_name");
-        install_task_callback_func = (install_task_callback_t)GetProcAddress(lib, "install_task_callback");
-        remove_task_callback_func = (remove_task_callback_t)GetProcAddress(lib, "remove_task_callback");
+        get_task_callback_count_func = (get_task_callback_count_t)get_proc(lib, "get_task_callback_count");
+        get_task_callback_name_func = (get_task_callback_name_t)get_proc(lib, "get_task_callback_name");
+        install_task_callback_func = (install_task_callback_t)get_proc(lib, "install_task_callback");
+        remove_task_callback_func = (remove_task_callback_t)get_proc(lib, "remove_task_callback");
 
-        GetTransformOfMap_func = (GetTransformOfMap_t)GetProcAddress(lib, "GetTransformOfMap");
-        GetPositionOfMap_func = (GetPositionOfMap_t)GetProcAddress(lib, "GetPositionOfMap");
-        GetDirection_func = (GetDirection_t)GetProcAddress(lib, "GetDirection");
-        GetRotation_func = (GetRotation_t)GetProcAddress(lib, "GetRotation");
-        GetStar_func = (GetStar_t)GetProcAddress(lib, "GetStar");
-        GetStarJson_func = (GetStarJson_t)GetProcAddress(lib, "GetStarJson");
-        GetUID_func = (GetUID_t)GetProcAddress(lib, "GetUID");
-        GetAllInfo_func = (GetAllInfo_t)GetProcAddress(lib, "GetAllInfo");
-#else
-        alloc_string_func = (alloc_string_t)dlsym(lib, "alloc_string");
-        get_string_length_func = (get_string_length_t)dlsym(lib, "get_string_length");
-        get_string_context_func = (get_string_context_t)dlsym(lib, "get_string_context");
-        free_string_func = (free_string_t)dlsym(lib, "free_string");
-        get_last_error_func = (get_last_error_t)dlsym(lib, "get_last_error");
-        get_error_define_count_func = (get_error_define_count_t)dlsym(lib, "get_error_define_count");
-        get_error_define_func = (get_error_define_t)dlsym(lib, "get_error_define");
-        check_impl_valid_func = (check_impl_valid_t)dlsym(lib, "check_impl_valid");
-        auto_init_impl_func = (auto_init_impl_t)dlsym(lib, "auto_init_impl");
-
-        GetTransformOfMap_func = (GetTransformOfMap_t)dlsym(lib, "GetTransformOfMap");
-        GetPositionOfMap_func = (GetPositionOfMap_t)dlsym(lib, "GetPositionOfMap");
-        GetDirection_func = (GetDirection_t)dlsym(lib, "GetDirection");
-        GetRotation_func = (GetRotation_t)dlsym(lib, "GetRotation");
-        GetStar_func = (GetStar_t)dlsym(lib, "GetStar");
-        GetStarJson_func = (GetStarJson_t)dlsym(lib, "GetStarJson");
-        GetUID_func = (GetUID_t)dlsym(lib, "GetUID");
-        GetAllInfo_func = (GetAllInfo_t)dlsym(lib, "GetAllInfo");
-#endif
+        GetTransformOfMap_func = (GetTransformOfMap_t)get_proc(lib, "GetTransformOfMap");
+        GetPositionOfMap_func = (GetPositionOfMap_t)get_proc(lib, "GetPositionOfMap");
+        GetDirection_func = (GetDirection_t)get_proc(lib, "GetDirection");
+        GetRotation_func = (GetRotation_t)get_proc(lib, "GetRotation");
+        GetStar_func = (GetStar_t)get_proc(lib, "GetStar");
+        GetStarJson_func = (GetStarJson_t)get_proc(lib, "GetStarJson");
+        GetUID_func = (GetUID_t)get_proc(lib, "GetUID");
+        GetAllInfo_func = (GetAllInfo_t)get_proc(lib, "GetAllInfo");
     }
     ~inface()
     {
         if (lib != nullptr)
-#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-            FreeLibrary(lib);
-#else
-            dlclose(lib);
-#endif
+            free_lib(lib);
     }
 
     inface_string_ptr alloc_string()
