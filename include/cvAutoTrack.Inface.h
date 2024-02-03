@@ -52,14 +52,48 @@ extern "C"
     // proxy for cvAutoTrace.dll
     CVAUTOTRACE_INFACE_API bool api(const char *json, inface_string_ptr result);
 
-    CVAUTOTRACE_INFACE_API bool GetTransformOfMap(double &x, double &y, double &a, int &mapId);
-    CVAUTOTRACE_INFACE_API bool GetPositionOfMap(double &x, double &y, int &mapId);
-    CVAUTOTRACE_INFACE_API bool GetDirection(double &a);
-    CVAUTOTRACE_INFACE_API bool GetRotation(double &a);
-    CVAUTOTRACE_INFACE_API bool GetStar(double &x, double &y, bool &isEnd);
-    CVAUTOTRACE_INFACE_API bool GetStarJson(char *json_buff, int buff_size);
-    CVAUTOTRACE_INFACE_API bool GetUID(int &uid);
-    CVAUTOTRACE_INFACE_API bool GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
+    /****************************************************************************************************/
+    __declspec(deprecated("** this is a deprecated function, your should used GetCompileVersion**")) extern "C" bool CVAUTOTRACE_INFACE_API verison(char *versionBuff);
+    extern "C" bool CVAUTOTRACE_INFACE_API init();
+    extern "C" bool CVAUTOTRACE_INFACE_API uninit();
+
+    extern "C" bool CVAUTOTRACE_INFACE_API startServe();
+    extern "C" bool CVAUTOTRACE_INFACE_API stopServe();
+
+    extern "C" bool CVAUTOTRACE_INFACE_API SetUseBitbltCaptureMode();
+    extern "C" bool CVAUTOTRACE_INFACE_API SetUseDx11CaptureMode();
+    extern "C" bool CVAUTOTRACE_INFACE_API SetHandle(long long int handle);
+    extern "C" bool CVAUTOTRACE_INFACE_API SetWorldCenter(double x, double y);
+    extern "C" bool CVAUTOTRACE_INFACE_API SetWorldScale(double scale);
+
+    extern "C" bool CVAUTOTRACE_INFACE_API ImportMapBlock(int id_x, int id_y, const char *image_data, int image_data_size, int image_width, int image_height);
+    extern "C" bool CVAUTOTRACE_INFACE_API ImportMapBlockCenter(int x, int y);
+    extern "C" bool CVAUTOTRACE_INFACE_API ImportMapBlockCenterScale(int x, int y, double scale);
+
+    extern "C" bool CVAUTOTRACE_INFACE_API GetTransformOfMap(double &x, double &y, double &a, int &mapId);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetPositionOfMap(double &x, double &y, int &mapId);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetDirection(double &a);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetRotation(double &a);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetStar(double &x, double &y, bool &isEnd);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetStarJson(char *jsonBuff);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetUID(int &uid);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
+
+    extern "C" bool CVAUTOTRACE_INFACE_API GetInfoLoadPicture(char *path, int &uid, double &x, double &y, double &a);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetInfoLoadVideo(char *path, char *pathOutFile);
+
+    extern "C" bool CVAUTOTRACE_INFACE_API DebugCapture();
+    extern "C" bool CVAUTOTRACE_INFACE_API DebugCapturePath(const char *path_buff, int buff_size);
+
+    extern "C" int CVAUTOTRACE_INFACE_API GetLastErr();
+    extern "C" int CVAUTOTRACE_INFACE_API GetLastErrMsg(char *msg_buff, int buff_size);
+    extern "C" int CVAUTOTRACE_INFACE_API GetLastErrJson(char *json_buff, int buff_size);
+
+    extern "C" bool CVAUTOTRACE_INFACE_API SetDisableFileLog();
+    extern "C" bool CVAUTOTRACE_INFACE_API SetEnableFileLog();
+
+    extern "C" bool CVAUTOTRACE_INFACE_API GetCompileVersion(char *version_buff, int buff_size);
+    extern "C" bool CVAUTOTRACE_INFACE_API GetCompileTime(char *time_buff, int buff_size);
 #if __cplusplus
 }
 #endif
@@ -101,14 +135,39 @@ typedef bool (*get_task_callback_name_t)(int index, inface_string_ptr result);
 typedef bool (*install_task_callback_t)(const char *task_name, int (*callback)(const char * /*json*/));
 typedef bool (*remove_task_callback_t)(const char *task_name);
 
+/****************************************************************************************************/
+typedef bool (*verison_t)(char *versionBuff);
+typedef bool (*init_t)();
+typedef bool (*uninit_t)();
+typedef bool (*startServe_t)();
+typedef bool (*stopServe_t)();
+typedef bool (*SetUseBitbltCaptureMode_t)();
+typedef bool (*SetUseDx11CaptureMode_t)();
+typedef bool (*SetHandle_t)(long long int handle);
+typedef bool (*SetWorldCenter_t)(double x, double y);
+typedef bool (*SetWorldScale_t)(double scale);
+typedef bool (*ImportMapBlock_t)(int id_x, int id_y, const char *image_data, int image_data_size, int image_width, int image_height);
+typedef bool (*ImportMapBlockCenter_t)(int x, int y);
+typedef bool (*ImportMapBlockCenterScale_t)(int x, int y, double scale);
 typedef bool (*GetTransformOfMap_t)(double &x, double &y, double &a, int &mapId);
 typedef bool (*GetPositionOfMap_t)(double &x, double &y, int &mapId);
 typedef bool (*GetDirection_t)(double &a);
 typedef bool (*GetRotation_t)(double &a);
 typedef bool (*GetStar_t)(double &x, double &y, bool &isEnd);
-typedef bool (*GetStarJson_t)(char *json_buff, int buff_size);
+typedef bool (*GetStarJson_t)(char *jsonBuff);
 typedef bool (*GetUID_t)(int &uid);
 typedef bool (*GetAllInfo_t)(double &x, double &y, int &mapId, double &a, double &r, int &uid);
+typedef bool (*GetInfoLoadPicture_t)(char *path, int &uid, double &x, double &y, double &a);
+typedef bool (*GetInfoLoadVideo_t)(char *path, char *pathOutFile);
+typedef bool (*DebugCapture_t)();
+typedef bool (*DebugCapturePath_t)(const char *path_buff, int buff_size);
+typedef int (*GetLastErr_t)();
+typedef int (*GetLastErrMsg_t)(char *msg_buff, int buff_size);
+typedef int (*GetLastErrJson_t)(char *json_buff, int buff_size);
+typedef bool (*SetDisableFileLog_t)();
+typedef bool (*SetEnableFileLog_t)();
+typedef bool (*GetCompileVersion_t)(char *version_buff, int buff_size);
+typedef bool (*GetCompileTime_t)(char *time_buff, int buff_size);
 
 struct inface
 {
@@ -130,6 +189,20 @@ struct inface
     install_task_callback_t install_task_callback_func;
     remove_task_callback_t remove_task_callback_func;
 
+    /****************************************************************************************************/
+    verison_t verison_func;
+    init_t init_func;
+    uninit_t uninit_func;
+    startServe_t startServe_func;
+    stopServe_t stopServe_func;
+    SetUseBitbltCaptureMode_t SetUseBitbltCaptureMode_func;
+    SetUseDx11CaptureMode_t SetUseDx11CaptureMode_func;
+    SetHandle_t SetHandle_func;
+    SetWorldCenter_t SetWorldCenter_func;
+    SetWorldScale_t SetWorldScale_func;
+    ImportMapBlock_t ImportMapBlock_func;
+    ImportMapBlockCenter_t ImportMapBlockCenter_func;
+    ImportMapBlockCenterScale_t ImportMapBlockCenterScale_func;
     GetTransformOfMap_t GetTransformOfMap_func;
     GetPositionOfMap_t GetPositionOfMap_func;
     GetDirection_t GetDirection_func;
@@ -138,6 +211,17 @@ struct inface
     GetStarJson_t GetStarJson_func;
     GetUID_t GetUID_func;
     GetAllInfo_t GetAllInfo_func;
+    GetInfoLoadPicture_t GetInfoLoadPicture_func;
+    GetInfoLoadVideo_t GetInfoLoadVideo_func;
+    DebugCapture_t DebugCapture_func;
+    DebugCapturePath_t DebugCapturePath_func;
+    GetLastErr_t GetLastErr_func;
+    GetLastErrMsg_t GetLastErrMsg_func;
+    GetLastErrJson_t GetLastErrJson_func;
+    SetDisableFileLog_t SetDisableFileLog_func;
+    SetEnableFileLog_t SetEnableFileLog_func;
+    GetCompileVersion_t GetCompileVersion_func;
+    GetCompileTime_t GetCompileTime_func;
 
     inface(std::string path = "cvAutoTrack.Inface.dll")
     {
@@ -160,7 +244,20 @@ struct inface
         get_task_callback_name_func = (get_task_callback_name_t)get_proc(lib, "get_task_callback_name");
         install_task_callback_func = (install_task_callback_t)get_proc(lib, "install_task_callback");
         remove_task_callback_func = (remove_task_callback_t)get_proc(lib, "remove_task_callback");
-
+        /****************************************************************************************************/
+        verison_func = (verison_t)get_proc(lib, "verison");
+        init_func = (init_t)get_proc(lib, "init");
+        uninit_func = (uninit_t)get_proc(lib, "uninit");
+        startServe_func = (startServe_t)get_proc(lib, "startServe");
+        stopServe_func = (stopServe_t)get_proc(lib, "stopServe");
+        SetUseBitbltCaptureMode_func = (SetUseBitbltCaptureMode_t)get_proc(lib, "SetUseBitbltCaptureMode");
+        SetUseDx11CaptureMode_func = (SetUseDx11CaptureMode_t)get_proc(lib, "SetUseDx11CaptureMode");
+        SetHandle_func = (SetHandle_t)get_proc(lib, "SetHandle");
+        SetWorldCenter_func = (SetWorldCenter_t)get_proc(lib, "SetWorldCenter");
+        SetWorldScale_func = (SetWorldScale_t)get_proc(lib, "SetWorldScale");
+        ImportMapBlock_func = (ImportMapBlock_t)get_proc(lib, "ImportMapBlock");
+        ImportMapBlockCenter_func = (ImportMapBlockCenter_t)get_proc(lib, "ImportMapBlockCenter");
+        ImportMapBlockCenterScale_func = (ImportMapBlockCenterScale_t)get_proc(lib, "ImportMapBlockCenterScale");
         GetTransformOfMap_func = (GetTransformOfMap_t)get_proc(lib, "GetTransformOfMap");
         GetPositionOfMap_func = (GetPositionOfMap_t)get_proc(lib, "GetPositionOfMap");
         GetDirection_func = (GetDirection_t)get_proc(lib, "GetDirection");
@@ -169,6 +266,17 @@ struct inface
         GetStarJson_func = (GetStarJson_t)get_proc(lib, "GetStarJson");
         GetUID_func = (GetUID_t)get_proc(lib, "GetUID");
         GetAllInfo_func = (GetAllInfo_t)get_proc(lib, "GetAllInfo");
+        GetInfoLoadPicture_func = (GetInfoLoadPicture_t)get_proc(lib, "GetInfoLoadPicture");
+        GetInfoLoadVideo_func = (GetInfoLoadVideo_t)get_proc(lib, "GetInfoLoadVideo");
+        DebugCapture_func = (DebugCapture_t)get_proc(lib, "DebugCapture");
+        DebugCapturePath_func = (DebugCapturePath_t)get_proc(lib, "DebugCapturePath");
+        GetLastErr_func = (GetLastErr_t)get_proc(lib, "GetLastErr");
+        GetLastErrMsg_func = (GetLastErrMsg_t)get_proc(lib, "GetLastErrMsg");
+        GetLastErrJson_func = (GetLastErrJson_t)get_proc(lib, "GetLastErrJson");
+        SetDisableFileLog_func = (SetDisableFileLog_t)get_proc(lib, "SetDisableFileLog");
+        SetEnableFileLog_func = (SetEnableFileLog_t)get_proc(lib, "SetEnableFileLog");
+        GetCompileVersion_func = (GetCompileVersion_t)get_proc(lib, "GetCompileVersion");
+        GetCompileTime_func = (GetCompileTime_t)get_proc(lib, "GetCompileTime");
     }
     ~inface()
     {
@@ -256,60 +364,199 @@ struct inface
         return remove_task_callback_func(task_name);
     }
 
+    /****************************************************************************************************/
+
+    bool verison(char *versionBuff)
+    {
+        if (verison_func == nullptr)
+            return false;
+        return verison_func(versionBuff);
+    }
+    bool init()
+    {
+        if (init_func == nullptr)
+            return false;
+        return init_func();
+    }
+    bool uninit()
+    {
+        if (uninit_func == nullptr)
+            return false;
+        return uninit_func();
+    }
+    bool startServe()
+    {
+        if (startServe_func == nullptr)
+            return false;
+        return startServe_func();
+    }
+    bool stopServe()
+    {
+        if (stopServe_func == nullptr)
+            return false;
+        return stopServe_func();
+    }
+    bool SetUseBitbltCaptureMode()
+    {
+        if (SetUseBitbltCaptureMode_func == nullptr)
+            return false;
+        return SetUseBitbltCaptureMode_func();
+    }
+    bool SetUseDx11CaptureMode()
+    {
+        if (SetUseDx11CaptureMode_func == nullptr)
+            return false;
+        return SetUseDx11CaptureMode_func();
+    }
+    bool SetHandle(long long int handle)
+    {
+        if (SetHandle_func == nullptr)
+            return false;
+        return SetHandle_func(handle);
+    }
+    bool SetWorldCenter(double x, double y)
+    {
+        if (SetWorldCenter_func == nullptr)
+            return false;
+        return SetWorldCenter_func(x, y);
+    }
+    bool SetWorldScale(double scale)
+    {
+        if (SetWorldScale_func == nullptr)
+            return false;
+        return SetWorldScale_func(scale);
+    }
+    bool ImportMapBlock(int id_x, int id_y, const char *image_data, int image_data_size, int image_width, int image_height)
+    {
+        if (ImportMapBlock_func == nullptr)
+            return false;
+        return ImportMapBlock_func(id_x, id_y, image_data, image_data_size, image_width, image_height);
+    }
+    bool ImportMapBlockCenter(int x, int y)
+    {
+        if (ImportMapBlockCenter_func == nullptr)
+            return false;
+        return ImportMapBlockCenter_func(x, y);
+    }
+    bool ImportMapBlockCenterScale(int x, int y, double scale)
+    {
+        if (ImportMapBlockCenterScale_func == nullptr)
+            return false;
+        return ImportMapBlockCenterScale_func(x, y, scale);
+    }
     bool GetTransformOfMap(double &x, double &y, double &a, int &mapId)
     {
         if (GetTransformOfMap_func == nullptr)
             return false;
         return GetTransformOfMap_func(x, y, a, mapId);
     }
-
     bool GetPositionOfMap(double &x, double &y, int &mapId)
     {
         if (GetPositionOfMap_func == nullptr)
             return false;
         return GetPositionOfMap_func(x, y, mapId);
     }
-
     bool GetDirection(double &a)
     {
         if (GetDirection_func == nullptr)
             return false;
         return GetDirection_func(a);
     }
-
     bool GetRotation(double &a)
     {
         if (GetRotation_func == nullptr)
             return false;
         return GetRotation_func(a);
     }
-
     bool GetStar(double &x, double &y, bool &isEnd)
     {
         if (GetStar_func == nullptr)
             return false;
         return GetStar_func(x, y, isEnd);
     }
-
-    bool GetStarJson(char *json_buff, int buff_size)
+    bool GetStarJson(char *jsonBuff)
     {
         if (GetStarJson_func == nullptr)
             return false;
-        return GetStarJson_func(json_buff, buff_size);
+        return GetStarJson_func(jsonBuff);
     }
-
     bool GetUID(int &uid)
     {
         if (GetUID_func == nullptr)
             return false;
         return GetUID_func(uid);
     }
-
     bool GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid)
     {
         if (GetAllInfo_func == nullptr)
             return false;
         return GetAllInfo_func(x, y, mapId, a, r, uid);
+    }
+    bool GetInfoLoadPicture(char *path, int &uid, double &x, double &y, double &a)
+    {
+        if (GetInfoLoadPicture_func == nullptr)
+            return false;
+        return GetInfoLoadPicture_func(path, uid, x, y, a);
+    }
+    bool GetInfoLoadVideo(char *path, char *pathOutFile)
+    {
+        if (GetInfoLoadVideo_func == nullptr)
+            return false;
+        return GetInfoLoadVideo_func(path, pathOutFile);
+    }
+    bool DebugCapture()
+    {
+        if (DebugCapture_func == nullptr)
+            return false;
+        return DebugCapture_func();
+    }
+    bool DebugCapturePath(const char *path_buff, int buff_size)
+    {
+        if (DebugCapturePath_func == nullptr)
+            return false;
+        return DebugCapturePath_func(path_buff, buff_size);
+    }
+    int GetLastErr()
+    {
+        if (GetLastErr_func == nullptr)
+            return -1;
+        return GetLastErr_func();
+    }
+    int GetLastErrMsg(char *msg_buff, int buff_size)
+    {
+        if (GetLastErrMsg_func == nullptr)
+            return -1;
+        return GetLastErrMsg_func(msg_buff, buff_size);
+    }
+    int GetLastErrJson(char *json_buff, int buff_size)
+    {
+        if (GetLastErrJson_func == nullptr)
+            return -1;
+        return GetLastErrJson_func(json_buff, buff_size);
+    }
+    bool SetDisableFileLog()
+    {
+        if (SetDisableFileLog_func == nullptr)
+            return false;
+        return SetDisableFileLog_func();
+    }
+    bool SetEnableFileLog()
+    {
+        if (SetEnableFileLog_func == nullptr)
+            return false;
+        return SetEnableFileLog_func();
+    }
+    bool GetCompileVersion(char *version_buff, int buff_size)
+    {
+        if (GetCompileVersion_func == nullptr)
+            return false;
+        return GetCompileVersion_func(version_buff, buff_size);
+    }
+    bool GetCompileTime(char *time_buff, int buff_size)
+    {
+        if (GetCompileTime_func == nullptr)
+            return false;
+        return GetCompileTime_func(time_buff, buff_size);
     }
 
     std::string get_error_define(int index)
