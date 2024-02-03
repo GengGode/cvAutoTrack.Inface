@@ -153,12 +153,12 @@ namespace utils
         size_t in_size = string.size();
         size_t out_size = in_size * 2;
         char *in_buf = new char[in_size + 1];
-        wchar_t *out_buf = new wchar_t[out_size + 1];
+        char *out_buf = new char[out_size + 1];
         memset(in_buf, 0, in_size + 1);
         memset(out_buf, 0, out_size + 1);
         memcpy(in_buf, string.c_str(), in_size);
         char *in_ptr = in_buf;
-        wchar_t *out_ptr = out_buf;
+        char *out_ptr = out_buf;
         size_t ret = iconv(cd, &in_ptr, &in_size, &out_ptr, &out_size);
         if (ret == (size_t)-1)
         {
@@ -167,7 +167,7 @@ namespace utils
             iconv_close(cd);
             return ret_string;
         }
-        ret_string = out_buf;
+        ret_string = std::wstring(out_buf, out_buf + out_size);
         delete[] in_buf;
         delete[] out_buf;
         iconv_close(cd);
