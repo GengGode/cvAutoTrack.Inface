@@ -53,7 +53,11 @@ extern "C"
     CVAUTOTRACE_INFACE_API bool api(const char *json, inface_string_ptr result);
 
     /****************************************************************************************************/
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
     __declspec(deprecated("** this is a deprecated function, your should used GetCompileVersion**")) extern "C" bool CVAUTOTRACE_INFACE_API verison(char *versionBuff);
+#else
+__attribute__((deprecated("** this is a deprecated function, your should used GetCompileVersion**"))) extern "C" bool CVAUTOTRACE_INFACE_API verison(char *versionBuff);
+#endif
     extern "C" bool CVAUTOTRACE_INFACE_API init();
     extern "C" bool CVAUTOTRACE_INFACE_API uninit();
 
