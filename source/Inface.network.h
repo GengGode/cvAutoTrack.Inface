@@ -8,23 +8,6 @@ inline bool dowload_vaild()
     return system("curl --version");
 }
 
-inline bool cout_is_utf8()
-{
-    auto command = "chcp";
-    auto res = get_command_result(command);
-    if (res.find("65001") != std::string::npos)
-        return true;
-    return false;
-}
-inline bool cout_is_gbk()
-{
-    auto command = "chcp";
-    auto res = get_command_result(command);
-    if (res.find("936") != std::string::npos)
-        return true;
-    return false;
-}
-
 inline bool server_ssl_vaild()
 {
     auto command = "curl -I https://download.api.weixitianli.com";
