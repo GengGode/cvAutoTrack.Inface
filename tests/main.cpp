@@ -56,11 +56,11 @@ int main()
         std::cout << "task_callback[" << i << "]: " << inface.get_task_callback_name(i) << std::endl;
     }
 
-    auto init_res = inface.auto_init_impl();
-    std::cout << "init_res: " << init_res << std::endl;
-    if (init_res != 0)
+    auto init_impl_res = inface.auto_init_impl();
+    std::cout << "init_res: " << init_impl_res << std::endl;
+    if (init_impl_res != 0)
     {
-        std::cout << "init failed: " << inface.get_error_define(init_res) << std::endl;
+        std::cout << "init failed: " << inface.get_error_define(init_impl_res) << std::endl;
         return 0;
     }
     double x, y, a;
@@ -73,6 +73,17 @@ int main()
         char buff[1024] = {0};
         inface.GetLastErrMsg(buff, 1024);
         std::cout << "get_transform_of_map failed: " << error << " " << buff << std::endl;
+    }
+
+    auto init_res = inface.init();
+    std::cout << "init_res: " << init_res << std::endl;
+    if (init_res != 0)
+    {
+        auto error = inface.GetLastErr();
+        char buff[1024] = {0};
+        inface.GetLastErrMsg(buff, 1024);
+        std::cout << "init failed: " << error << " " << buff << std::endl;
+        return 0;
     }
 
     return 0;
