@@ -12,7 +12,7 @@
 #endif
 bool init()
 {
-    
+
     auto fp = fopen(lib_name, "rb");
     std::shared_ptr<FILE> fp_ptr(fp, [](FILE *fp)
                                  { if(fp)fclose(fp); });
@@ -67,6 +67,13 @@ int main()
     int mapId;
     auto get_transform_of_map_res = inface.GetTransformOfMap(x, y, a, mapId);
     std::cout << "get_transform_of_map_res: " << get_transform_of_map_res << std::endl;
+    if (get_transform_of_map_res == 0)
+    {
+        auto error = inface.GetLastErr();
+        char buff[1024] = {0};
+        inface.GetLastErrMsg(buff, 1024);
+        std::cout << "get_transform_of_map failed: " << error << " " << buff << std::endl;
+    }
 
     return 0;
 }
