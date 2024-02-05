@@ -44,7 +44,7 @@ public:
         size_t m_colno;
         std::string m_errmsg;
     };
-    inline static std::vector<location> m_locations = {{"default", 0, 0, "success"}};
+    inline static std::vector<location> m_locations = {{"default", 0, 0, "成功"}};
     ErrorInvoker(const std::string &path, size_t lineno, size_t colno, const std::string &errmsg)
     {
         m_locations.push_back(location{path, lineno, colno, errmsg});

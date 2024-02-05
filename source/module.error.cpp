@@ -36,7 +36,7 @@ int get_error_define_count()
 int get_error_define(int index, inface_string_ptr result)
 {
     if (index < 0 || index >= ErrorInvoker::m_locations.size())
-        return error("error index out of range");
+        return error("错误索引超出范围");
     auto &location = ErrorInvoker::m_locations[index];
     result->context = std::to_string(index) + ":" +
 #ifdef _DEBUG

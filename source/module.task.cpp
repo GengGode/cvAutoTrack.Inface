@@ -10,7 +10,7 @@ int get_task_callback_count()
 int get_task_callback_name(int index, inface_string_ptr result)
 {
     if (index < 0 || index >= inface_task_map.size())
-        return error("error index out of range");
+        return error("回调表的索引超出范围");
     auto iter = inface_task_map.begin();
     for (int i = 0; i < index; i++)
         iter++;
@@ -21,7 +21,7 @@ int get_task_callback_name(int index, inface_string_ptr result)
 int install_task_callback(const char *task_name, int (*callback)(const char * /*json*/))
 {
     if (task_name == nullptr)
-        return error("task_name is null");
+        return error("task_name是空指针");
 
     inface_task_map[task_name] = [callback](std::string json) -> int
     {
@@ -33,7 +33,7 @@ int install_task_callback(const char *task_name, int (*callback)(const char * /*
 int remove_task_callback(const char *task_name)
 {
     if (task_name == nullptr)
-        return error("task_name is null");
+        return error("task_name是空指针");
 
     inface_task_map[task_name] = nullptr;
     return 0;
