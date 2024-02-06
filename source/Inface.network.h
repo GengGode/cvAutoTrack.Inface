@@ -32,7 +32,7 @@ inline std::string add_skip_ssl_param(const std::string &url)
 
 inline void check_or_create_path(const std::string &path)
 {
-    auto dir = std::filesystem::path(path);
+    auto dir = std::filesystem::path(path).parent_path();
     if (!std::filesystem::exists(dir))
         std::filesystem::create_directories(dir);
 }
