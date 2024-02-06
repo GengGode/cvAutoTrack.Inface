@@ -1,227 +1,92 @@
 #include "cvAutoTrack.Inface.h"
 #include "Inface.library.h"
 
-bool verison(char *versionBuff)
-{
-    auto func = (decltype(&verison))get_proc(get_global_handle(), "verison");
-    if (func == nullptr)
-        return false;
-    return func(versionBuff);
-}
-bool init()
-{
-    auto func = (decltype(&init))get_proc(get_global_handle(), "init");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool uninit()
-{
-    auto func = (decltype(&uninit))get_proc(get_global_handle(), "uninit");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool startServe()
-{
-    auto func = (decltype(&startServe))get_proc(get_global_handle(), "startServe");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool stopServe()
-{
-    auto func = (decltype(&stopServe))get_proc(get_global_handle(), "stopServe");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool SetUseBitbltCaptureMode()
-{
-    auto func = (decltype(&SetUseBitbltCaptureMode))get_proc(get_global_handle(), "SetUseBitbltCaptureMode");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool SetUseDx11CaptureMode()
-{
-    auto func = (decltype(&SetUseDx11CaptureMode))get_proc(get_global_handle(), "SetUseDx11CaptureMode");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool SetHandle(long long int handle)
-{
-    auto func = (decltype(&SetHandle))get_proc(get_global_handle(), "SetHandle");
-    if (func == nullptr)
-        return false;
-    return func(handle);
-}
-bool SetWorldCenter(double x, double y)
-{
-    auto func = (decltype(&SetWorldCenter))get_proc(get_global_handle(), "SetWorldCenter");
-    if (func == nullptr)
-        return false;
-    return func(x, y);
-}
-bool SetWorldScale(double scale)
-{
-    auto func = (decltype(&SetWorldScale))get_proc(get_global_handle(), "SetWorldScale");
-    if (func == nullptr)
-        return false;
-    return func(scale);
-}
-bool ImportMapBlock(int id_x, int id_y, const char *image_data, int image_data_size, int image_width, int image_height)
-{
-    auto func = (decltype(&ImportMapBlock))get_proc(get_global_handle(), "ImportMapBlock");
-    if (func == nullptr)
-        return false;
-    return func(id_x, id_y, image_data, image_data_size, image_width, image_height);
-}
-bool ImportMapBlockCenter(int x, int y)
-{
-    auto func = (decltype(&ImportMapBlockCenter))get_proc(get_global_handle(), "ImportMapBlockCenter");
-    if (func == nullptr)
-        return false;
-    return func(x, y);
-}
-bool ImportMapBlockCenterScale(int x, int y, double scale)
-{
-    auto func = (decltype(&ImportMapBlockCenterScale))get_proc(get_global_handle(), "ImportMapBlockCenterScale");
-    if (func == nullptr)
-        return false;
-    return func(x, y, scale);
-}
-bool GetTransformOfMap(double &x, double &y, double &a, int &mapId)
-{
-    auto func = (decltype(&GetTransformOfMap))get_proc(get_global_handle(), "GetTransformOfMap");
-    if (func == nullptr)
-        return false;
-    return func(x, y, a, mapId);
-}
-bool GetPositionOfMap(double &x, double &y, int &mapId)
-{
-    auto func = (decltype(&GetPositionOfMap))get_proc(get_global_handle(), "GetPositionOfMap");
-    if (func == nullptr)
-        return false;
-    return func(x, y, mapId);
-}
-bool GetDirection(double &a)
-{
-    auto func = (decltype(&GetDirection))get_proc(get_global_handle(), "GetDirection");
-    if (func == nullptr)
-        return false;
-    return func(a);
-}
-bool GetRotation(double &a)
-{
-    auto func = (decltype(&GetRotation))get_proc(get_global_handle(), "GetRotation");
-    if (func == nullptr)
-        return false;
-    return func(a);
-}
-bool GetStar(double &x, double &y, bool &isEnd)
-{
-    auto func = (decltype(&GetStar))get_proc(get_global_handle(), "GetStar");
-    if (func == nullptr)
-        return false;
-    return func(x, y, isEnd);
-}
-bool GetStarJson(char *jsonBuff)
-{
-    auto func = (decltype(&GetStarJson))get_proc(get_global_handle(), "GetStarJson");
-    if (func == nullptr)
-        return false;
-    return func(jsonBuff);
-}
-bool GetUID(int &uid)
-{
-    auto func = (decltype(&GetUID))get_proc(get_global_handle(), "GetUID");
-    if (func == nullptr)
-        return false;
-    return func(uid);
-}
-bool GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid)
-{
-    auto func = (decltype(&GetAllInfo))get_proc(get_global_handle(), "GetAllInfo");
-    if (func == nullptr)
-        return false;
-    return func(x, y, mapId, a, r, uid);
-}
-bool GetInfoLoadPicture(char *path, int &uid, double &x, double &y, double &a)
-{
-    auto func = (decltype(&GetInfoLoadPicture))get_proc(get_global_handle(), "GetInfoLoadPicture");
-    if (func == nullptr)
-        return false;
-    return func(path, uid, x, y, a);
-}
-bool GetInfoLoadVideo(char *path, char *pathOutFile)
-{
-    auto func = (decltype(&GetInfoLoadVideo))get_proc(get_global_handle(), "GetInfoLoadVideo");
-    if (func == nullptr)
-        return false;
-    return func(path, pathOutFile);
-}
-bool DebugCapture()
-{
-    auto func = (decltype(&DebugCapture))get_proc(get_global_handle(), "DebugCapture");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool DebugCapturePath(const char *path_buff, int buff_size)
-{
-    auto func = (decltype(&DebugCapturePath))get_proc(get_global_handle(), "DebugCapturePath");
-    if (func == nullptr)
-        return false;
-    return func(path_buff, buff_size);
-}
-int GetLastErr()
-{
-    auto func = (decltype(&GetLastErr))get_proc(get_global_handle(), "GetLastErr");
-    if (func == nullptr)
-        return -1;
-    return func();
-}
-int GetLastErrMsg(char *msg_buff, int buff_size)
-{
-    auto func = (decltype(&GetLastErrMsg))get_proc(get_global_handle(), "GetLastErrMsg");
-    if (func == nullptr)
-        return -1;
-    return func(msg_buff, buff_size);
-}
-int GetLastErrJson(char *json_buff, int buff_size)
-{
-    auto func = (decltype(&GetLastErrJson))get_proc(get_global_handle(), "GetLastErrJson");
-    if (func == nullptr)
-        return -1;
-    return func(json_buff, buff_size);
-}
-bool SetDisableFileLog()
-{
-    auto func = (decltype(&SetDisableFileLog))get_proc(get_global_handle(), "SetDisableFileLog");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool SetEnableFileLog()
-{
-    auto func = (decltype(&SetEnableFileLog))get_proc(get_global_handle(), "SetEnableFileLog");
-    if (func == nullptr)
-        return false;
-    return func();
-}
-bool GetCompileVersion(char *version_buff, int buff_size)
-{
-    auto func = (decltype(&GetCompileVersion))get_proc(get_global_handle(), "GetCompileVersion");
-    if (func == nullptr)
-        return false;
-    return func(version_buff, buff_size);
-}
-bool GetCompileTime(char *time_buff, int buff_size)
-{
-    auto func = (decltype(&GetCompileTime))get_proc(get_global_handle(), "GetCompileTime");
-    if (func == nullptr)
-        return false;
-    return func(time_buff, buff_size);
-}
+#define maroc_concatenate(a, b) maroc_concatenate_1(a, b)
+#define maroc_concatenate_1(a, b) maroc_concatenate_2(a, b)
+#define maroc_concatenate_2(a, b) a##b
+#define maroc_expand(x) x
+#define maroc_for_each_0(pred, ...)
+#define maroc_for_each_1(pred, n, x, ...) pred(x, 0)
+#define maroc_for_each_2(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_1(pred, 1, __VA_ARGS__))
+#define maroc_for_each_3(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_2(pred, 2, __VA_ARGS__))
+#define maroc_for_each_4(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_3(pred, 3, __VA_ARGS__))
+#define maroc_for_each_5(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_4(pred, 4, __VA_ARGS__))
+#define maroc_for_each_6(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_5(pred, 5, __VA_ARGS__))
+#define maroc_for_each_7(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_6(pred, 6, __VA_ARGS__))
+#define maroc_for_each_8(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_7(pred, 7, __VA_ARGS__))
+#define maroc_for_each_9(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_8(pred, 8, __VA_ARGS__))
+#define maroc_for_each_10(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_9(pred, 9, __VA_ARGS__))
+#define maroc_args_count(...) maroc_expand(maroc_arg_count_1(0, ##__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0))
+#define maroc_arg_count_1(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, n, ...) n
+#define maroc_for_each_(n, pred, ...) maroc_expand(maroc_concatenate(maroc_for_each_, n)(pred, n, __VA_ARGS__))
+#define maroc_for_each(pred, ...) maroc_expand(maroc_for_each_(maroc_expand(maroc_args_count(__VA_ARGS__)), pred, __VA_ARGS__))
+#define comma_0()
+#define comma_1() ,
+#define comma_2() ,
+#define comma_3() ,
+#define comma_4() ,
+#define comma_5() ,
+#define comma_6() ,
+#define comma_7() ,
+#define comma_8() ,
+#define comma_9() ,
+
+typedef long long int long_long_int;
+typedef const char *const_char_ptr;
+typedef char *char_ptr;
+typedef bool &bool_ref;
+typedef int &int_ref;
+typedef double &double_ref;
+#define type_null_
+#define type_null_bool
+#define type_null_int
+#define type_null_double
+#define type_null_bool_ref
+#define type_null_int_ref
+#define type_null_double_ref
+#define type_null_long_long_int
+#define type_null_const_char_ptr
+#define type_null_char_ptr
+#define only_name(v, n) \
+    type_null_##v comma_##n()
+#define bind_call(name, ...)                                               \
+    name(__VA_ARGS__)                                                      \
+    {                                                                      \
+        auto func = (decltype(&name))get_proc(get_global_handle(), #name); \
+        if (func == nullptr)                                               \
+            return false;                                                  \
+        return func(maroc_for_each(only_name, __VA_ARGS__));               \
+    }
+
+bool bind_call(verison, char_ptr versionBuff);
+bool bind_call(init);
+bool bind_call(uninit);
+bool bind_call(startServe);
+bool bind_call(stopServe);
+bool bind_call(SetUseBitbltCaptureMode);
+bool bind_call(SetUseDx11CaptureMode);
+bool bind_call(SetHandle, long_long_int handle);
+bool bind_call(SetWorldCenter, double x, double y);
+bool bind_call(SetWorldScale, double scale);
+bool bind_call(ImportMapBlock, int id_x, int id_y, const_char_ptr image_data, int image_data_size, int image_width, int image_height);
+bool bind_call(ImportMapBlockCenter, int x, int y);
+bool bind_call(ImportMapBlockCenterScale, int x, int y, double scale);
+bool bind_call(GetTransformOfMap, double_ref x, double_ref y, double_ref a, int_ref mapId);
+bool bind_call(GetPositionOfMap, double_ref x, double_ref y, int_ref mapId);
+bool bind_call(GetDirection, double_ref a);
+bool bind_call(GetRotation, double_ref a);
+bool bind_call(GetStar, double_ref x, double_ref y, bool_ref isEnd);
+bool bind_call(GetStarJson, char_ptr jsonBuff);
+bool bind_call(GetUID, int_ref uid);
+bool bind_call(GetAllInfo, double_ref x, double_ref y, int_ref mapId, double_ref a, double_ref r, int_ref uid);
+bool bind_call(GetInfoLoadPicture, char_ptr path, int_ref uid, double_ref x, double_ref y, double_ref a);
+bool bind_call(GetInfoLoadVideo, char_ptr path, char_ptr pathOutFile);
+bool bind_call(DebugCapture);
+bool bind_call(DebugCapturePath, const_char_ptr path_buff, int buff_size);
+int bind_call(GetLastErr);
+int bind_call(GetLastErrMsg, char_ptr msg_buff, int buff_size);
+int bind_call(GetLastErrJson, char_ptr json_buff, int buff_size);
+bool bind_call(SetDisableFileLog);
+bool bind_call(SetEnableFileLog);
+bool bind_call(GetCompileVersion, char_ptr version_buff, int buff_size);
+bool bind_call(GetCompileTime, char_ptr time_buff, int buff_size)
