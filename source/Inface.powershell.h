@@ -36,4 +36,12 @@ inline bool unzip_file(const std::string &zip_file, const std::string &output_di
     return true;
 }
 
+inline std::string get_file_hash(const std::string &file)
+{
+    std::string command = "Get-FileHash \"" + file + "\" -Algorithm MD5 | Select-Object -ExpandProperty Hash";
+    std::string response;
+    exec_powershell(command, response);
+    return response.substr(0, response.size() - 1);
+}
+
 #endif // __INFACE_POWERSHELL_H__
