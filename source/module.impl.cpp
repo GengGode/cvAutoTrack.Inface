@@ -9,12 +9,13 @@
 // check cvAutoTrack.dll is valid
 bool check_impl_valid()
 {
-    auto cvat_file = inface_value_map["cvAutoTrack dll path"] + "\\" + inface_value_map["cvAutoTrack dll name"];
+    auto cvat_file = inface_value_map["cvAutoTrack dll path"] + inface_value_map["cvAutoTrack dll name"];
     // check cvAutoTrack.dll is valid
     FILE *fp = fopen(cvat_file.c_str(), "rb");
     if (fp == nullptr)
         return false;
     fclose(fp);
+    set_deps_path(inface_value_map["cvAutoTrack dll path"]);
     auto handle = load_impl(cvat_file);
     if (handle == nullptr)
         return false;
@@ -22,17 +23,25 @@ bool check_impl_valid()
     return true;
 }
 
+bool check_file_hash(const std::string &file, const std::string &hash)
+{
+    auto hash_res = get_file_hash(file);
+    if (hash_res != hash)
+        return false;
+    return true;
+}
+
 int download_cvat(std::string download_url)
 {
     auto cvat_dir = inface_value_map["cvAutoTrack dll path"];
-    auto cvat_file = inface_value_map["cvAutoTrack dll path"] + "\\" + inface_value_map["cvAutoTrack dll name"];
-    auto cvat_cache_file = inface_value_map["cvAutoTrack dll path"] + "\\" + inface_value_map["cvAutoTrack download cache name"];
+    auto cvat_file = inface_value_map["cvAutoTrack dll path"] + inface_value_map["cvAutoTrack dll name"];
+    auto cvat_cache_file = inface_value_map["cvAutoTrack dll path"] + inface_value_map["cvAutoTrack download cache name"];
     auto download_res = download_file(download_url, cvat_cache_file);
     if (!download_res)
         return error("下载cvAutoTrack.zip失败");
-    auto unzip_res = unzip_file(cvat_cache_file, cvat_dir);
-    if (!unzip_res)
-        return error("解压cvAutoTrack.zip失败");
+    // auto unzip_res = unzip_file(cvat_cache_file, cvat_dir);
+    // if (!unzip_res)
+    //     return error("解压cvAutoTrack.zip失败");
     FILE *fp = fopen(cvat_file.c_str(), "rb");
     if (fp == nullptr)
         return error("没有找到cvAutoTrack.dll");
@@ -62,16 +71,33 @@ int auto_init_impl_v8(std::string download_url)
         return error("下载cvAutoTrack.dll失败");
 
     std::string download_depends;
-    auto download_depends_res = get_response("https://download.api.weixitianli.com/cvAutoTrack/DependFilesDownloadUrlAndHash", download_depends);
+    auto download_depends_res = get_response(inface_value_map["cvAutoTrack deps download url path"], download_depends);
     if (!download_depends_res)
         return error("获取依赖文件列表失败");
+    auto depends = split(download_depends, "\n");
+    for (auto depend : depends)
+    {
+        auto depend_info = split(depend, "\\|");
+        if (depend_info.size() != 2)
+            continue;
+        auto depend_hash = depend_info[0];
+        auto depend_url = depend_info[1];
+        auto depend_file = inface_value_map["cvAutoTrack dll path"] + depend_url.substr(depend_url.find_last_of('/') + 1);
+        auto download_res = download_file(depend_url, depend_file);
+        if (!download_res)
+            return error("下载依赖文件失败");
+        auto hash_res = check_file_hash(depend_file, depend_hash);
+        if (!hash_res)
+            return error("校验依赖文件失败");
+    }
 
     auto check_res = check_impl_valid();
     if (!check_res)
         return error("校验cvAutoTrack.dll失败");
 
     // auto depends = split(download_depends, "\n");
-    auto load_res = auto_load_impl("cvAutoTrack.dll", true);
+    auto cvat_file = inface_value_map["cvAutoTrack dll path"] + inface_value_map["cvAutoTrack dll name"];
+    auto load_res = auto_load_impl(cvat_file, true);
     if (!load_res)
         return error("加载cvAutoTrack.dll失败");
     return 0;
@@ -81,22 +107,24 @@ int auto_init_impl()
 {
     if (check_impl_valid())
     {
-        auto load_res = auto_load_impl("cvAutoTrack.dll");
+        auto cvat_file = inface_value_map["cvAutoTrack dll path"] + inface_value_map["cvAutoTrack dll name"];
+        set_deps_path(inface_value_map["cvAutoTrack dll path"]);
+        auto load_res = auto_load_impl(cvat_file, true);
         if (!load_res)
             return error("加载cvAutoTrack.dll失败");
         return 0;
     }
 
     std::string download_url;
-    auto download_url_res = get_response("https://download.api.weixitianli.com/cvAutoTrack/downloadUrl", download_url);
+    auto download_url_res = get_response(inface_value_map["cvAutoTrack url"] + "/downloadUrl", download_url);
     if (!download_url_res)
         return error("获取下载链接失败");
     std::string download_hash;
-    auto download_hash_res = get_response("https://download.api.weixitianli.com/cvAutoTrack/Hash", download_hash);
+    auto download_hash_res = get_response(inface_value_map["cvAutoTrack url"] + "/Hash", download_hash);
     if (!download_hash_res)
         return error("获取下载文件hash失败");
     std::string download_version;
-    auto download_version_res = get_response("https://download.api.weixitianli.com/cvAutoTrack/Version", download_version);
+    auto download_version_res = get_response(inface_value_map["cvAutoTrack url"] + "/LatestVersion", download_version);
     if (!download_version_res)
         return error("获取cvAutoTrack.dll版本失败");
 
