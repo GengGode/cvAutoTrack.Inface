@@ -49,7 +49,7 @@ inline bool download_file(const std::string &url, const std::string &path)
 inline bool get_response(const std::string &url, std::string &response)
 {
     auto vaild_url = server_ssl_vaild() ? url : add_skip_ssl_param(url); // to_unvaild_ssl_url(url);
-    auto command = "curl " + vaild_url;
+    auto command = "curl -L " + vaild_url;
     response = get_command_result(command);
     return true;
 }
