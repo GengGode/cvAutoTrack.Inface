@@ -19,4 +19,10 @@ inline int parse_major_version(const std::string &version)
     return std::stoi(match[1]);
 }
 
+inline std::vector<std::string> split(const std::string &context, const std::string &patten)
+{
+    std::regex reg(patten);
+    return std::vector<std::string>(std::sregex_token_iterator(context.begin(), context.end(), reg, -1), std::sregex_token_iterator());
+}
+
 #endif // __STRING_MATCH_H__
