@@ -89,4 +89,4 @@ int bind_call(GetLastErrJson, char_ptr json_buff, int buff_size);
 bool bind_call(SetDisableFileLog);
 bool bind_call(SetEnableFileLog);
 bool bind_call(GetCompileVersion, char_ptr version_buff, int buff_size);
-bool bind_call(GetCompileTime, char_ptr time_buff, int buff_size)
+bool bind_call(GetCompileTime, char_ptr time_buff, int buff_size);
