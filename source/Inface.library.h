@@ -9,6 +9,11 @@ public:
     inline static library_handle_t library = nullptr;
 };
 
+inline void set_deps_path(const std::string &path)
+{
+    set_dll_path(path);
+}
+
 inline auto load_impl(const std::string &path)
 {
     return load_lib(path);

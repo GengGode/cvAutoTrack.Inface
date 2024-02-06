@@ -7,6 +7,7 @@
 #define popen _popen
 #define pclose _pclose
 #define library_handle_t HMODULE
+#define set_dll_path(path) SetDllDirectory(path.c_str())
 #define load_lib(path) LoadLibrary(path.c_str())
 #define free_lib(lib) FreeLibrary(lib)
 #define get_proc(lib, name) GetProcAddress(lib, name)
@@ -14,6 +15,7 @@
 #include <unistd.h>
 #include <dlfcn.h>
 #define library_handle_t void *
+#define set_dll_path(path)
 #define load_lib(path) dlopen(path.c_str(), RTLD_LAZY)
 #define free_lib(lib) dlclose(lib)
 #define get_proc(lib, name) dlsym(lib, name)
