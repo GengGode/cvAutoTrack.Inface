@@ -17,12 +17,12 @@ inline bool unzip_file(const std::string &zip_file, const std::string &output_di
     auto res = exec_powershell(command, response);
     if (!res)
         return false;
-        // remove zip file
-#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-    DeleteFileA(zip_file.c_str());
-#else
-    unlink(zip_file.c_str());
-#endif
+    // remove zip file
+    // #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
+    //     DeleteFileA(zip_file.c_str());
+    // #else
+    //     unlink(zip_file.c_str());
+    // #endif
     return true;
 }
 
