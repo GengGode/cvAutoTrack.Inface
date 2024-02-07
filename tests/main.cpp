@@ -12,7 +12,6 @@
 #endif
 bool init()
 {
-
     auto fp = fopen(lib_name, "rb");
     std::shared_ptr<FILE> fp_ptr(fp, [](FILE *fp)
                                  { if(fp)fclose(fp); });
@@ -22,6 +21,22 @@ bool init()
         return 0;
     }
     return 1;
+}
+
+void show(inface &inface)
+{
+    int error_define_count = inface.get_error_define_count();
+    std::cout << "error_define_count: " << error_define_count << std::endl;
+    for (int i = 0; i < error_define_count; i++)
+    {
+        std::cout << "error_define[" << i << "]: " << inface.get_error_define(i) << std::endl;
+    }
+    int task_callback_count = inface.get_task_callback_count();
+    std::cout << "task_callback_count: " << task_callback_count << std::endl;
+    for (int i = 0; i < task_callback_count; i++)
+    {
+        std::cout << "task_callback[" << i << "]: " << inface.get_task_callback_name(i) << std::endl;
+    }
 }
 
 int main()
@@ -35,25 +50,6 @@ int main()
     {
         std::cout << "inface is invalid" << std::endl;
         return 0;
-    }
-
-    auto alloc_res = inface.alloc_string();
-    if (alloc_res == nullptr)
-    {
-        std::cout << "alloc_res is nullptr" << std::endl;
-        return 0;
-    }
-    int error_define_count = inface.get_error_define_count();
-    std::cout << "error_define_count: " << error_define_count << std::endl;
-    for (int i = 0; i < error_define_count; i++)
-    {
-        std::cout << "error_define[" << i << "]: " << inface.get_error_define(i) << std::endl;
-    }
-    int task_callback_count = inface.get_task_callback_count();
-    std::cout << "task_callback_count: " << task_callback_count << std::endl;
-    for (int i = 0; i < task_callback_count; i++)
-    {
-        std::cout << "task_callback[" << i << "]: " << inface.get_task_callback_name(i) << std::endl;
     }
 
     auto init_impl_res = inface.auto_init_impl();
