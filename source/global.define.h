@@ -24,6 +24,10 @@
 #include <string>
 #include <filesystem>
 
+#define return_if_err(pred)        \
+    if (auto err = pred; err != 0) \
+        return err;
+
 static std::string get_command_result(const std::string &command)
 {
     std::string result;
