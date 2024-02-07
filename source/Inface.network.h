@@ -33,6 +33,7 @@ inline std::string add_skip_ssl_param(const std::string &url)
 
 inline void check_or_create_path(const std::string &path)
 {
+    debug_print("check_or_create_path: %s\n", path.c_str());
     auto dir = std::filesystem::path(path).parent_path();
     if (!std::filesystem::exists(dir))
         std::filesystem::create_directories(dir);
@@ -40,6 +41,7 @@ inline void check_or_create_path(const std::string &path)
 
 inline bool download_file(const std::string &url, const std::string &path)
 {
+    debug_print("download_file: %s -> %s\n", url.c_str(), path.c_str());
     check_or_create_path(path);
     auto vaild_url = server_ssl_vaild() ? url : add_skip_ssl_param(url); // to_unvaild_ssl_url(url);
     auto command = "curl -L -o " + path + " " + vaild_url;
@@ -49,6 +51,7 @@ inline bool download_file(const std::string &url, const std::string &path)
 
 inline bool get_response(const std::string &url, std::string &response)
 {
+    debug_print("get_response: %s\n", url.c_str());
     auto vaild_url = server_ssl_vaild() ? url : add_skip_ssl_param(url); // to_unvaild_ssl_url(url);
     auto command = "curl -L " + vaild_url;
     response = get_command_result(command);
