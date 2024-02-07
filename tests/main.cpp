@@ -59,16 +59,27 @@ int main()
         std::cout << "init failed: " << inface.get_error_define(init_impl_res) << std::endl;
         return 0;
     }
-    double x, y, a;
-    int mapId;
-    auto get_transform_of_map_res = inface.GetTransformOfMap(x, y, a, mapId);
-    std::cout << "get_transform_of_map_res: " << get_transform_of_map_res << std::endl;
-    if (get_transform_of_map_res == 0)
+    try
     {
-        auto error = inface.GetLastErr();
-        char buff[1024] = {0};
-        inface.GetLastErrMsg(buff, 1024);
-        std::cout << "get_transform_of_map failed: " << error << " " << buff << std::endl;
+        double x, y, a;
+        int mapId;
+        auto get_transform_of_map_res = inface.GetTransformOfMap(x, y, a, mapId);
+        std::cout << "get_transform_of_map_res: " << get_transform_of_map_res << std::endl;
+        if (get_transform_of_map_res == 0)
+        {
+            auto error = inface.GetLastErr();
+            char buff[1024] = {0};
+            inface.GetLastErrMsg(buff, 1024);
+            std::cout << "get_transform_of_map failed: " << error << " " << buff << std::endl;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+    catch (...)
+    {
+        std::cout << "unknown exception" << std::endl;
     }
 
     auto init_res = inface.init();
