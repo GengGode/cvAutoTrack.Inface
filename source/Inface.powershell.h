@@ -6,17 +6,7 @@
 inline bool exec_powershell(const std::string &command, std::string &response)
 {
     auto command_line = "powershell -Command \"" + command + "\"";
-
-    auto fp = popen(command_line.c_str(), "r");
-    if (fp == nullptr)
-        return false;
-    char buffer[1024];
-    while (fgets(buffer, sizeof(buffer), fp) != nullptr)
-    {
-        response += buffer;
-    }
-
-    pclose(fp);
+    response = get_command_result(command_line);
     return true;
 }
 
