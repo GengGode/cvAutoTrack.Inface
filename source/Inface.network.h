@@ -10,11 +10,12 @@ inline bool dowload_vaild()
 
 inline bool server_ssl_vaild()
 {
-    auto command = "curl -I https://download.api.weixitianli.com";
-    auto res = get_command_result(command);
-    if (res.find("200 OK") != std::string::npos)
-        return true;
-    return false;
+    return true;
+    // auto command = "curl -I https://download.api.weixitianli.com";
+    // auto res = get_command_result(command);
+    // if (res.find("200 OK") != std::string::npos)
+    //     return true;
+    // return false;
 }
 
 inline std::string to_unvaild_ssl_url(const std::string &url)
