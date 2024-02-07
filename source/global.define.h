@@ -50,4 +50,10 @@ struct version_info
     std::string version;
 };
 
+#ifdef _DEBUG
+#define debug_print(fmt, ...) printf(fmt, __VA_ARGS__)
+#else
+#define debug_print(fmt, ...)
+#endif
+
 #endif // __GLOBAL_DEFINE_H__
