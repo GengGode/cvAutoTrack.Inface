@@ -43,4 +43,11 @@ static std::string get_command_result(const std::string &command)
     return result;
 }
 
+struct version_info
+{
+    std::string url;
+    std::string hash;
+    std::string version;
+};
+
 #endif // __GLOBAL_DEFINE_H__
