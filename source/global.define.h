@@ -27,7 +27,7 @@
 static std::string get_command_result(const std::string &command)
 {
     std::string result;
-    FILE *fp = popen(command.c_str(), "r");
+    auto fp = popen(command.c_str(), "r");
     if (fp == nullptr)
         return result;
     char buffer[1024];
