@@ -47,4 +47,24 @@ inline bool auto_load_impl(const std::string &path, bool is_reload = false)
     return false;
 }
 
+inline std::string get_dll_file_version(const std::string &path)
+{
+    DWORD dwDummy;
+    DWORD dwFVISize = GetFileVersionInfoSizeA(path.c_str(), &dwDummy);
+    if (dwFVISize == 0)
+        return "";
+    std::vector<BYTE> vData(dwFVISize);
+    if (!GetFileVersionInfoA(path.c_str(), 0, dwFVISize, &vData[0]))
+        return "";
+    LPVOID lpBuffer;
+    UINT uLen;
+    if (!VerQueryValueA(&vData[0], "\\", &lpBuffer, &uLen))
+        return "";
+    VS_FIXEDFILEINFO *pFileInfo = (VS_FIXEDFILEINFO *)lpBuffer;
+    if (pFileInfo->dwSignature != 0xfeef04bd)
+        return "";
+    std::string version = std::to_string((pFileInfo->dwFileVersionMS >> 16) & 0xffff) + "." + std::to_string((pFileInfo->dwFileVersionMS >> 0) & 0xffff) + "." + std::to_string((pFileInfo->dwFileVersionLS >> 16) & 0xffff); // + "." + std::to_string((pFileInfo->dwFileVersionLS >> 0) & 0xffff);
+    return version;
+}
+
 #endif // __INFACE_LIBRARY_H__

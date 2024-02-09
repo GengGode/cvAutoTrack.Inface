@@ -36,6 +36,19 @@ bool check_impl_valid()
     return true;
 }
 
+bool check_is_need_update()
+{
+    auto cvat_file = get_value("加载目录", "库文件名");
+    auto local_version = get_dll_file_version(cvat_file);
+    if (local_version.empty())
+        return true;
+    std::string download_version;
+    auto download_version_res = get_response(get_value("项目链接") + "/LatestVersion", download_version);
+    if (!download_version_res)
+        return false;
+    return download_version > local_version;
+}
+
 bool check_file_hash(const std::string &file, const std::string &hash)
 {
     auto hash_res = get_file_hash(file);
@@ -135,7 +148,7 @@ int get_latest_version(version_info &info)
 
 int auto_init_impl()
 {
-    if (check_impl_valid())
+    if (check_impl_valid() && !check_is_need_update())
     {
         return load_impl_and_deps();
     }

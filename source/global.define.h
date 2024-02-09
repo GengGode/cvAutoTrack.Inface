@@ -3,6 +3,7 @@
 
 #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
 #include <windows.h>
+#pragma comment(lib, "version")
 #define pipe_t HANDLE
 #define popen _popen
 #define pclose _pclose
