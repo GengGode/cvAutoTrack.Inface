@@ -58,46 +58,46 @@ extern "C"
 #else
 __attribute__((deprecated("** this is a deprecated function, your should used GetCompileVersion**"))) extern "C" bool CVAUTOTRACE_INFACE_API verison(char *versionBuff);
 #endif
-    extern "C" bool CVAUTOTRACE_INFACE_API init();
-    extern "C" bool CVAUTOTRACE_INFACE_API uninit();
+    bool CVAUTOTRACE_INFACE_API init();
+    bool CVAUTOTRACE_INFACE_API uninit();
 
-    extern "C" bool CVAUTOTRACE_INFACE_API startServe();
-    extern "C" bool CVAUTOTRACE_INFACE_API stopServe();
+    bool CVAUTOTRACE_INFACE_API startServe();
+    bool CVAUTOTRACE_INFACE_API stopServe();
 
-    extern "C" bool CVAUTOTRACE_INFACE_API SetUseBitbltCaptureMode();
-    extern "C" bool CVAUTOTRACE_INFACE_API SetUseDx11CaptureMode();
-    extern "C" bool CVAUTOTRACE_INFACE_API SetHandle(long long int handle);
-    extern "C" bool CVAUTOTRACE_INFACE_API SetWorldCenter(double x, double y);
-    extern "C" bool CVAUTOTRACE_INFACE_API SetWorldScale(double scale);
+    bool CVAUTOTRACE_INFACE_API SetUseBitbltCaptureMode();
+    bool CVAUTOTRACE_INFACE_API SetUseDx11CaptureMode();
+    bool CVAUTOTRACE_INFACE_API SetHandle(long long int handle);
+    bool CVAUTOTRACE_INFACE_API SetWorldCenter(double x, double y);
+    bool CVAUTOTRACE_INFACE_API SetWorldScale(double scale);
 
-    extern "C" bool CVAUTOTRACE_INFACE_API ImportMapBlock(int id_x, int id_y, const char *image_data, int image_data_size, int image_width, int image_height);
-    extern "C" bool CVAUTOTRACE_INFACE_API ImportMapBlockCenter(int x, int y);
-    extern "C" bool CVAUTOTRACE_INFACE_API ImportMapBlockCenterScale(int x, int y, double scale);
+    bool CVAUTOTRACE_INFACE_API ImportMapBlock(int id_x, int id_y, const char *image_data, int image_data_size, int image_width, int image_height);
+    bool CVAUTOTRACE_INFACE_API ImportMapBlockCenter(int x, int y);
+    bool CVAUTOTRACE_INFACE_API ImportMapBlockCenterScale(int x, int y, double scale);
 
-    extern "C" bool CVAUTOTRACE_INFACE_API GetTransformOfMap(double &x, double &y, double &a, int &mapId);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetPositionOfMap(double &x, double &y, int &mapId);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetDirection(double &a);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetRotation(double &a);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetStar(double &x, double &y, bool &isEnd);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetStarJson(char *jsonBuff);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetUID(int &uid);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
+    bool CVAUTOTRACE_INFACE_API GetTransformOfMap(double &x, double &y, double &a, int &mapId);
+    bool CVAUTOTRACE_INFACE_API GetPositionOfMap(double &x, double &y, int &mapId);
+    bool CVAUTOTRACE_INFACE_API GetDirection(double &a);
+    bool CVAUTOTRACE_INFACE_API GetRotation(double &a);
+    bool CVAUTOTRACE_INFACE_API GetStar(double &x, double &y, bool &isEnd);
+    bool CVAUTOTRACE_INFACE_API GetStarJson(char *jsonBuff);
+    bool CVAUTOTRACE_INFACE_API GetUID(int &uid);
+    bool CVAUTOTRACE_INFACE_API GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
 
-    extern "C" bool CVAUTOTRACE_INFACE_API GetInfoLoadPicture(char *path, int &uid, double &x, double &y, double &a);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetInfoLoadVideo(char *path, char *pathOutFile);
+    bool CVAUTOTRACE_INFACE_API GetInfoLoadPicture(char *path, int &uid, double &x, double &y, double &a);
+    bool CVAUTOTRACE_INFACE_API GetInfoLoadVideo(char *path, char *pathOutFile);
 
-    extern "C" bool CVAUTOTRACE_INFACE_API DebugCapture();
-    extern "C" bool CVAUTOTRACE_INFACE_API DebugCapturePath(const char *path_buff, int buff_size);
+    bool CVAUTOTRACE_INFACE_API DebugCapture();
+    bool CVAUTOTRACE_INFACE_API DebugCapturePath(const char *path_buff, int buff_size);
 
-    extern "C" int CVAUTOTRACE_INFACE_API GetLastErr();
-    extern "C" int CVAUTOTRACE_INFACE_API GetLastErrMsg(char *msg_buff, int buff_size);
-    extern "C" int CVAUTOTRACE_INFACE_API GetLastErrJson(char *json_buff, int buff_size);
+    int CVAUTOTRACE_INFACE_API GetLastErr();
+    int CVAUTOTRACE_INFACE_API GetLastErrMsg(char *msg_buff, int buff_size);
+    int CVAUTOTRACE_INFACE_API GetLastErrJson(char *json_buff, int buff_size);
 
-    extern "C" bool CVAUTOTRACE_INFACE_API SetDisableFileLog();
-    extern "C" bool CVAUTOTRACE_INFACE_API SetEnableFileLog();
+    bool CVAUTOTRACE_INFACE_API SetDisableFileLog();
+    bool CVAUTOTRACE_INFACE_API SetEnableFileLog();
 
-    extern "C" bool CVAUTOTRACE_INFACE_API GetCompileVersion(char *version_buff, int buff_size);
-    extern "C" bool CVAUTOTRACE_INFACE_API GetCompileTime(char *time_buff, int buff_size);
+    bool CVAUTOTRACE_INFACE_API GetCompileVersion(char *version_buff, int buff_size);
+    bool CVAUTOTRACE_INFACE_API GetCompileTime(char *time_buff, int buff_size);
 #if __cplusplus
 }
 #endif
