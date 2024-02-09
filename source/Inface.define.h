@@ -25,7 +25,8 @@ inline static std::map<std::string, std::string> inface_value_map = {
     {"资源目录", "core/deps/"},
     {"库文件名", "cvAutoTrack.dll"},
     {"项目链接", "https://download.api.weixitianli.com/cvAutoTrack.Core"},
-    {"依赖链接", "https://download.api.weixitianli.com/cvAutoTrack.Core/DependFilesDownloadUrlAndHash"}};
+    {"依赖链接", "https://download.api.weixitianli.com/cvAutoTrack.Core/DependFilesDownloadUrlAndHash"},
+    {"强制使用本地版本", "false"}};
 
 inline static std::string get_value(const std::string &key)
 {

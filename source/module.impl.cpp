@@ -38,6 +38,9 @@ bool check_impl_valid()
 
 bool check_is_need_update()
 {
+    bool is_force_local = get_value("强制使用本地版本") == "true";
+    if (is_force_local)
+        return false;
     auto cvat_file = get_value("加载目录", "库文件名");
     auto local_version = get_dll_file_version(cvat_file);
     if (local_version.empty())

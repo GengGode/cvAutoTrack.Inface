@@ -60,14 +60,14 @@ int main()
         return 0;
     }
     char module_buff[1024] = {0};
-    auto module_res = inface.GetModulePath(module_buff, 1024);
-    if (module_res != 0)
+    auto module_res = inface.GetCoreModulePath(module_buff, 1024);
+    if (module_res)
     {
-        std::cout << "GetModulePath failed: " << inface.get_error_define(module_res) << std::endl;
+        std::cout << "module_buff: " << module_buff << std::endl;
     }
     else
     {
-        std::cout << "module_buff: " << module_buff << std::endl;
+        std::cout << "GetCoreModulePath failed: " << inface.get_error_define(module_res) << std::endl;
     }
 
     try
