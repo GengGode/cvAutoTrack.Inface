@@ -59,6 +59,17 @@ int main()
         std::cout << "init failed: " << inface.get_error_define(init_impl_res) << std::endl;
         return 0;
     }
+    char module_buff[1024] = {0};
+    auto module_res = inface.GetModulePath(module_buff, 1024);
+    if (module_res != 0)
+    {
+        std::cout << "GetModulePath failed: " << inface.get_error_define(module_res) << std::endl;
+    }
+    else
+    {
+        std::cout << "module_buff: " << module_buff << std::endl;
+    }
+
     try
     {
         double x, y, a;

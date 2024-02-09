@@ -98,6 +98,8 @@ __attribute__((deprecated("** this is a deprecated function, your should used Ge
 
     bool CVAUTOTRACE_INFACE_API GetCompileVersion(char *version_buff, int buff_size);
     bool CVAUTOTRACE_INFACE_API GetCompileTime(char *time_buff, int buff_size);
+    bool CVAUTOTRACE_INFACE_API GetModulePath(char *path_buff, int buff_size);
+
 #if __cplusplus
 }
 #endif
@@ -172,6 +174,7 @@ typedef bool (*SetDisableFileLog_t)();
 typedef bool (*SetEnableFileLog_t)();
 typedef bool (*GetCompileVersion_t)(char *version_buff, int buff_size);
 typedef bool (*GetCompileTime_t)(char *time_buff, int buff_size);
+typedef bool (*GetModulePath_t)(char *path_buff, int buff_size);
 
 struct inface
 {
@@ -226,6 +229,7 @@ struct inface
     SetEnableFileLog_t SetEnableFileLog_func;
     GetCompileVersion_t GetCompileVersion_func;
     GetCompileTime_t GetCompileTime_func;
+    GetModulePath_t GetModulePath_func;
 
     inface(std::string path = "cvAutoTrack.Inface.dll")
     {
@@ -281,6 +285,7 @@ struct inface
         SetEnableFileLog_func = (SetEnableFileLog_t)get_proc(lib, "SetEnableFileLog");
         GetCompileVersion_func = (GetCompileVersion_t)get_proc(lib, "GetCompileVersion");
         GetCompileTime_func = (GetCompileTime_t)get_proc(lib, "GetCompileTime");
+        GetModulePath_func = (GetModulePath_t)get_proc(lib, "GetModulePath");
     }
     ~inface()
     {
@@ -561,6 +566,12 @@ struct inface
         if (GetCompileTime_func == nullptr)
             return false;
         return GetCompileTime_func(time_buff, buff_size);
+    }
+    bool GetModulePath(char *path_buff, int buff_size)
+    {
+        if (GetModulePath_func == nullptr)
+            return false;
+        return GetModulePath_func(path_buff, buff_size);
     }
 
     std::string get_error_define(int index)
