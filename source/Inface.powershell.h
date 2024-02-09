@@ -12,7 +12,7 @@ inline bool exec_powershell(const std::string &command, std::string &response)
 
 inline bool unzip_file(const std::string &zip_file, const std::string &output_dir)
 {
-    std::string command = "Expand-Archive -Path " + zip_file + " -DestinationPath " + output_dir;
+    std::string command = "Expand-Archive -Path " + zip_file + " -DestinationPath " + output_dir + " -Force";
     std::string response;
     auto res = exec_powershell(command, response);
     if (!res)
