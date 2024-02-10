@@ -106,19 +106,34 @@ int auto_init_impl_v8(version_info &info)
             continue;
         auto depend_hash = depend_info[0];
         auto depend_url = depend_info[1];
-        auto depend_file = get_value("下载目录") + depend_url.substr(depend_url.find_last_of('/') + 1);
+        auto depend_file = depend_url.substr(depend_url.find_last_of('/') + 1);
+        auto depend_origin_file_hash = depend_file.substr(depend_file.find_last_of('-') + 1, 32);
+        auto depend_origin_file_name = depend_file.substr(0, depend_file.find_last_of('-')) + ".dll";
+        auto cache_depend_file = get_value("下载目录") + depend_file;
+        auto deps_file = get_value("依赖目录") + depend_origin_file_name;
+
         debug_print("depend_file: %s\n", depend_file.c_str());
         debug_print("depend_hash: %s\n", depend_hash.c_str());
         debug_print("depend_url: %s\n", depend_url.c_str());
+        debug_print("depend_origin_file_hash: %s\n", depend_origin_file_hash.c_str());
+        debug_print("depend_origin_file_name: %s\n", depend_origin_file_name.c_str());
+        debug_print("cache_depend_file: %s\n", cache_depend_file.c_str());
+        debug_print("deps_file: %s\n", deps_file.c_str());
 
-        if (!check_file_hash(depend_file, depend_hash))
-            if (!download_file(depend_url, depend_file))
+        if (check_file_hash(deps_file, depend_origin_file_hash))
+        {
+            debug_print("deps_file skip download: %s\n", deps_file.c_str());
+            continue;
+        }
+
+        if (!check_file_hash(cache_depend_file, depend_hash))
+            if (!download_file(depend_url, cache_depend_file))
                 return error("下载依赖文件失败");
-        auto hash_res = check_file_hash(depend_file, depend_hash);
+        auto hash_res = check_file_hash(cache_depend_file, depend_hash);
         if (!hash_res)
             return error("校验依赖文件失败");
         auto deps_dir = get_value("依赖目录");
-        auto unzip_res = unzip_file(depend_file, deps_dir);
+        auto unzip_res = unzip_file(cache_depend_file, deps_dir);
         if (!unzip_res)
             return error("解压依赖文件失败");
     }
