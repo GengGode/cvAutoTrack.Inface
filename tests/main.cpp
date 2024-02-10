@@ -69,7 +69,16 @@ int main()
     {
         std::cout << "GetCoreModulePath failed: " << inface.get_error_define(module_res) << std::endl;
     }
-
+    char version_buff[1024] = {0};
+    auto version_res = inface.GetCompileVersion(version_buff, 1024);
+    if (version_res)
+    {
+        std::cout << "version_buff: " << version_buff << std::endl;
+    }
+    else
+    {
+        std::cout << "GetCompileVersion failed: " << inface.get_error_define(version_res) << std::endl;
+    }
     try
     {
         double x, y, a;
