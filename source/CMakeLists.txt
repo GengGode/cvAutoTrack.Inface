@@ -10,5 +10,6 @@ PRIVATE
         module.inface.cpp
         module.string.cpp
         module.task.cpp
+        module.online.cpp
 )
 

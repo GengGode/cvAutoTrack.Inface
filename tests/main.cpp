@@ -42,14 +42,24 @@ void show(inface &inface)
 int main()
 {
     if (!init())
-        return 0;
-    std::cout << "init success" << std::endl;
+        return -1;
 
     inface inface(lib_name);
     if (!inface.is_valid)
     {
         std::cout << "inface is invalid" << std::endl;
         return 0;
+    }
+
+    auto str_ptr = inface.alloc_string();
+    inface.get_online_core_version_list(str_ptr);
+    {
+        int len = 0;
+        inface.get_string_length(str_ptr, &len);
+        char *buff = new char[len + 1]{0};
+        inface.get_string_context(str_ptr, buff, len + 1);
+        std::cout << "latest_version: " << buff << std::endl;
+        delete[] buff;
     }
 
     auto init_impl_res = inface.auto_init_impl();
