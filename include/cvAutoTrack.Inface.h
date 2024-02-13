@@ -28,6 +28,7 @@ extern "C"
     CVAUTOTRACE_INFACE_API inface_string_ptr alloc_string();
     CVAUTOTRACE_INFACE_API int get_string_length(inface_string_ptr str, int *length);
     CVAUTOTRACE_INFACE_API int get_string_context(inface_string_ptr str, char *buffer, int buffer_size);
+    CVAUTOTRACE_INFACE_API int set_string_context(inface_string_ptr str, const char *buffer, int buffer_size);
     CVAUTOTRACE_INFACE_API void free_string(inface_string_ptr str);
 
     // error code
@@ -129,6 +130,7 @@ typedef struct inface_string *inface_string_ptr;
 typedef inface_string_ptr (*alloc_string_t)();
 typedef int (*get_string_length_t)(inface_string_ptr str, int *length);
 typedef int (*get_string_context_t)(inface_string_ptr str, char *buffer, int buffer_size);
+typedef int (*set_string_context_t)(inface_string_ptr str, const char *buffer, int buffer_size);
 typedef void (*free_string_t)(inface_string_ptr str);
 typedef int (*get_last_error_t)();
 typedef int (*get_error_define_count_t)();
@@ -184,6 +186,7 @@ struct inface
     alloc_string_t alloc_string_func;
     get_string_length_t get_string_length_func;
     get_string_context_t get_string_context_func;
+    set_string_context_t set_string_context_func;
     free_string_t free_string_func;
     get_last_error_t get_last_error_func;
     get_error_define_count_t get_error_define_count_func;
@@ -241,6 +244,7 @@ struct inface
         alloc_string_func = (alloc_string_t)get_proc(lib, "alloc_string");
         get_string_length_func = (get_string_length_t)get_proc(lib, "get_string_length");
         get_string_context_func = (get_string_context_t)get_proc(lib, "get_string_context");
+        set_string_context_func = (set_string_context_t)get_proc(lib, "set_string_context");
         free_string_func = (free_string_t)get_proc(lib, "free_string");
         get_last_error_func = (get_last_error_t)get_proc(lib, "get_last_error");
         get_error_define_count_func = (get_error_define_count_t)get_proc(lib, "get_error_define_count");
@@ -310,6 +314,12 @@ struct inface
         if (get_string_context_func == nullptr)
             return 0;
         return get_string_context_func(str, buffer, buffer_size);
+    }
+    int set_string_context(inface_string_ptr str, const char *buffer, int buffer_size)
+    {
+        if (set_string_context_func == nullptr)
+            return 0;
+        return set_string_context_func(str, buffer, buffer_size);
     }
     void free_string(inface_string_ptr str)
     {

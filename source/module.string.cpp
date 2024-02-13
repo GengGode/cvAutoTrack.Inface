@@ -32,6 +32,18 @@ int get_string_context(inface_string_ptr str, char *buffer, int buffer_size)
     return length;
 }
 
+int set_string_context(inface_string_ptr str, const char *buffer, int buffer_size)
+{
+    if (str == nullptr)
+        return error("字符串指针为空");
+    if (buffer == nullptr)
+        return error("缓冲区指针为空");
+    if (buffer_size <= 0)
+        return error("缓冲区大小小于等于0");
+    str->context = std::string(buffer, buffer_size);
+    return buffer_size;
+}
+
 void free_string(inface_string_ptr ptr)
 {
     if (ptr == nullptr)
