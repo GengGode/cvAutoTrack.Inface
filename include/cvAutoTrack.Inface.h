@@ -26,7 +26,7 @@ extern "C"
 
     // string alloc and free
     CVAUTOTRACE_INFACE_API inface_string_ptr alloc_string();
-    CVAUTOTRACE_INFACE_API int get_string_length(inface_string_ptr str);
+    CVAUTOTRACE_INFACE_API int get_string_length(inface_string_ptr str, int *length);
     CVAUTOTRACE_INFACE_API int get_string_context(inface_string_ptr str, char *buffer, int buffer_size);
     CVAUTOTRACE_INFACE_API void free_string(inface_string_ptr str);
 
@@ -127,7 +127,7 @@ struct inface_string;
 typedef struct inface_string *inface_string_ptr;
 
 typedef inface_string_ptr (*alloc_string_t)();
-typedef int (*get_string_length_t)(inface_string_ptr str);
+typedef int (*get_string_length_t)(inface_string_ptr str, int *length);
 typedef int (*get_string_context_t)(inface_string_ptr str, char *buffer, int buffer_size);
 typedef void (*free_string_t)(inface_string_ptr str);
 typedef int (*get_last_error_t)();
@@ -299,11 +299,11 @@ struct inface
             return nullptr;
         return alloc_string_func();
     }
-    int get_string_length(inface_string_ptr str)
+    int get_string_length(inface_string_ptr str, int *length)
     {
         if (get_string_length_func == nullptr)
             return 0;
-        return get_string_length_func(str);
+        return get_string_length_func(str, length);
     }
     int get_string_context(inface_string_ptr str, char *buffer, int buffer_size)
     {
@@ -576,24 +576,28 @@ struct inface
 
     std::string get_error_define(int index)
     {
+        int len = 0;
         auto alloc_res = alloc_string();
         auto get_error_define_res = get_error_define(index, alloc_res);
-        auto get_string_length_res = get_string_length(alloc_res);
-        char buffer[1024] = {0};
-        auto get_string_context_res = get_string_context(alloc_res, buffer, sizeof(buffer));
+        auto get_string_length_res = get_string_length(alloc_res, &len);
+        char *buffer = new char[len + 1]{0};
+        auto get_string_context_res = get_string_context(alloc_res, buffer, len + 1);
         std::string result = buffer;
         free_string(alloc_res);
+        delete[] buffer;
         return result;
     }
     std::string get_task_callback_name(int index)
     {
+        int len = 0;
         auto alloc_res = alloc_string();
         auto get_task_callback_name_res = get_task_callback_name(index, alloc_res);
-        auto get_string_length_res = get_string_length(alloc_res);
-        char buffer[1024] = {0};
-        auto get_string_context_res = get_string_context(alloc_res, buffer, sizeof(buffer));
+        auto get_string_length_res = get_string_length(alloc_res, &len);
+        char *buffer = new char[len + 1]{0};
+        auto get_string_context_res = get_string_context(alloc_res, buffer, len + 1);
         std::string result = buffer;
         free_string(alloc_res);
+        delete[] buffer;
         return result;
     }
 };
