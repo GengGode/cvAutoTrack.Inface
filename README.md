@@ -23,6 +23,6 @@ flowchart TD
 ```
 ### 推行计划
 
-- [ ] 实现静态链接版本的cvAutoTrack的inface调用
-- [ ] 实现动态链接版本的cvAutoTrack的inface调用
+- [x] 实现静态链接版本的cvAutoTrack的inface调用
+- [x] 实现动态链接版本的cvAutoTrack的inface调用
 - [ ] 实现动态链接版本的cvAutoTrack热更新inface调用
