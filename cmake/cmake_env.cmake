@@ -2,9 +2,6 @@
 #include(version/version.cmake)
 
 set(CMAKE_CXX_STANDARD 20)
-if(MSVC)
-    add_compile_options("/utf-8")
-endif ()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 if(WIN32)
