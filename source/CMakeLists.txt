@@ -12,5 +12,6 @@ PRIVATE
         module.string.cpp
         module.task.cpp
         module.online.cpp
+        module.version.cpp
 )
 

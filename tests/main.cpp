@@ -52,6 +52,17 @@ int main()
     }
 
     auto str_ptr = inface.alloc_string();
+    inface.get_local_core_version_list(str_ptr);
+    {
+        int len = 0;
+        inface.get_string_length(str_ptr, &len);
+        char *buff = new char[len + 1]{0};
+        inface.get_string_context(str_ptr, buff, len + 1);
+        std::cout << "local versions: " << buff << std::endl;
+        delete[] buff;
+    }
+
+    inface.set_string_context(str_ptr, "", 1);
     inface.get_online_core_version_list(str_ptr);
     {
         int len = 0;
