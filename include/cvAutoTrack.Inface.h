@@ -46,6 +46,8 @@ extern "C"
     CVAUTOTRACE_INFACE_API int get_online_core_version_info(const char *version, inface_string_ptr result);
     CVAUTOTRACE_INFACE_API int get_local_core_version_list(inface_string_ptr result);
 
+    // inface version info
+    CVAUTOTRACE_INFACE_API int get_inface_version(inface_string_ptr result);
 
     // get callback count
     CVAUTOTRACE_INFACE_API int get_task_callback_count();
@@ -149,6 +151,8 @@ typedef int (*get_online_core_version_list_t)(inface_string_ptr result);
 typedef int (*get_online_core_version_info_t)(const char *version, inface_string_ptr result);
 typedef int (*get_local_core_version_list_t)(inface_string_ptr result);
 
+typedef int (*get_inface_version_t)(inface_string_ptr result);
+
 typedef bool (*get_task_callback_count_t)();
 typedef bool (*get_task_callback_name_t)(int index, inface_string_ptr result);
 typedef bool (*install_task_callback_t)(const char *task_name, int (*callback)(const char * /*json*/));
@@ -210,6 +214,7 @@ struct inface
     get_online_core_version_info_t get_online_core_version_info_func;
     get_local_core_version_list_t get_local_core_version_list_func;
 
+    get_inface_version_t get_inface_version_func;
 
     get_task_callback_count_t get_task_callback_count_func;
     get_task_callback_name_t get_task_callback_name_func;
@@ -274,6 +279,7 @@ struct inface
         get_online_core_version_info_func = (get_online_core_version_info_t)get_proc(lib, "get_online_core_version_info");
         get_local_core_version_list_func = (get_local_core_version_list_t)get_proc(lib, "get_local_core_version_list");
 
+        get_inface_version_func = (get_inface_version_t)get_proc(lib, "get_inface_version");
 
         get_task_callback_count_func = (get_task_callback_count_t)get_proc(lib, "get_task_callback_count");
         get_task_callback_name_func = (get_task_callback_name_t)get_proc(lib, "get_task_callback_name");
@@ -406,6 +412,12 @@ struct inface
         return get_local_core_version_list_func(result);
     }
 
+    int get_inface_version(inface_string_ptr result)
+    {
+        if (get_inface_version_func == nullptr)
+            return 0;
+        return get_inface_version_func(result);
+    }
 
     int get_task_callback_count()
     {

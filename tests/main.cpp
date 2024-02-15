@@ -50,6 +50,16 @@ int main()
         std::cout << "inface is invalid" << std::endl;
         return 0;
     }
+    {
+        auto str_ptr = inface.alloc_string();
+        inface.get_inface_version(str_ptr);
+        int len = 0;
+        inface.get_string_length(str_ptr, &len);
+        char *buff = new char[len + 1]{0};
+        inface.get_string_context(str_ptr, buff, len + 1);
+        std::cout << "inface version: " << buff << std::endl;
+        delete[] buff;
+    }
 
     auto str_ptr = inface.alloc_string();
     inface.get_local_core_version_list(str_ptr);
