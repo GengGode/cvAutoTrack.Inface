@@ -1,4 +1,4 @@
-#include "cvAutoTrack.Inface.h"
+#include <cvAutoTrack.Inface.h>
 #include "Inface.library.h"
 
 #define maroc_concatenate(a, b) maroc_concatenate_1(a, b)

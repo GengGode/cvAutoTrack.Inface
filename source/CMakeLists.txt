@@ -10,10 +10,10 @@ INTERFACE
 PRIVATE
         module.error.cpp
         module.impl.cpp
-        module.inface.cpp
         module.string.cpp
         module.task.cpp
         module.online.cpp
         module.version.cpp
+        impl/impl.api.cpp
 )
 
