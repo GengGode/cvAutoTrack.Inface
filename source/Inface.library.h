@@ -9,12 +9,12 @@ public:
     inline static library_handle_t library = nullptr;
 };
 
-inline void set_deps_path(const std::string &path)
+inline void set_deps_path(const std::string& path)
 {
     set_dll_path(path);
 }
 
-inline auto load_impl(const std::string &path)
+inline auto load_impl(const std::string& path)
 {
     return load_lib(path);
 }
@@ -30,13 +30,13 @@ inline auto get_global_handle()
     return global::library;
 }
 
-inline bool try_load_impl(const std::string &path)
+inline bool try_load_impl(const std::string& path)
 {
     global::library = load_impl(path);
     return global::library != nullptr;
 }
 
-inline bool auto_load_impl(const std::string &path, bool is_reload = false)
+inline bool auto_load_impl(const std::string& path, bool is_reload = false)
 {
     if (is_reload && global::library != nullptr)
         free_impl(global::library);
@@ -47,8 +47,9 @@ inline bool auto_load_impl(const std::string &path, bool is_reload = false)
     return false;
 }
 
-inline std::string get_dll_file_version(const std::string &path)
+inline std::string get_dll_file_version(const std::string& path)
 {
+#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
     DWORD dwDummy;
     DWORD dwFVISize = GetFileVersionInfoSizeA(path.c_str(), &dwDummy);
     if (dwFVISize == 0)
@@ -60,11 +61,15 @@ inline std::string get_dll_file_version(const std::string &path)
     UINT uLen;
     if (!VerQueryValueA(&vData[0], "\\", &lpBuffer, &uLen))
         return "";
-    VS_FIXEDFILEINFO *pFileInfo = (VS_FIXEDFILEINFO *)lpBuffer;
+    VS_FIXEDFILEINFO* pFileInfo = (VS_FIXEDFILEINFO*)lpBuffer;
     if (pFileInfo->dwSignature != 0xfeef04bd)
         return "";
-    std::string version = std::to_string((pFileInfo->dwFileVersionMS >> 16) & 0xffff) + "." + std::to_string((pFileInfo->dwFileVersionMS >> 0) & 0xffff) + "." + std::to_string((pFileInfo->dwFileVersionLS >> 16) & 0xffff); // + "." + std::to_string((pFileInfo->dwFileVersionLS >> 0) & 0xffff);
+    std::string version = std::to_string((pFileInfo->dwFileVersionMS >> 16) & 0xffff) + "." + std::to_string((pFileInfo->dwFileVersionMS >> 0) & 0xffff) + "." +
+                          std::to_string((pFileInfo->dwFileVersionLS >> 16) & 0xffff); // + "." + std::to_string((pFileInfo->dwFileVersionLS >> 0) & 0xffff);
     return version;
+#else
+    return "";
+#endif
 }
 
 #endif // __INFACE_LIBRARY_H__
