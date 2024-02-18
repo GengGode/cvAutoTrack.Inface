@@ -6,15 +6,17 @@
 #include <cvAutoTrack.Inface.h>
 
 #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-#define lib_name "cvAutoTrack.Inface.dll"
+    #define lib_name "cvAutoTrack.Inface.dll"
 #else
-#define lib_name "libcvAutoTrack.Inface.so"
+    #define lib_name "libcvAutoTrack.Inface.so"
 #endif
 bool init()
 {
     auto fp = fopen(lib_name, "rb");
-    std::shared_ptr<FILE> fp_ptr(fp, [](FILE *fp)
-                                 { if(fp)fclose(fp); });
+    std::shared_ptr<FILE> fp_ptr(fp, [](FILE* fp) {
+        if (fp)
+            fclose(fp);
+    });
     if (fp_ptr == nullptr)
     {
         std::cout << lib_name " not found" << std::endl;
@@ -23,7 +25,7 @@ bool init()
     return 1;
 }
 
-void show(inface &inface)
+void show(inface& inface)
 {
     int error_define_count = inface.get_error_define_count();
     std::cout << "error_define_count: " << error_define_count << std::endl;
@@ -45,43 +47,22 @@ int main()
         return -1;
 
     inface inface(lib_name);
-    if (!inface.is_valid)
-    {
-        std::cout << "inface is invalid" << std::endl;
-        return 0;
-    }
     {
         auto str_ptr = inface.alloc_string();
         inface.get_inface_version(str_ptr);
-        int len = 0;
-        inface.get_string_length(str_ptr, &len);
-        char *buff = new char[len + 1]{0};
-        inface.get_string_context(str_ptr, buff, len + 1);
-        std::cout << "inface version: " << buff << std::endl;
-        delete[] buff;
+        auto version = inface.to_string(str_ptr);
+        std::cout << "inface version: " << version << std::endl;
     }
 
     auto str_ptr = inface.alloc_string();
     inface.get_local_core_version_list(str_ptr);
-    {
-        int len = 0;
-        inface.get_string_length(str_ptr, &len);
-        char *buff = new char[len + 1]{0};
-        inface.get_string_context(str_ptr, buff, len + 1);
-        std::cout << "local versions: " << buff << std::endl;
-        delete[] buff;
-    }
+    auto versions = inface.to_string(str_ptr);
+    std::cout << "local_version: " << versions << std::endl;
 
     inface.set_string_context(str_ptr, "", 1);
     inface.get_online_core_version_list(str_ptr);
-    {
-        int len = 0;
-        inface.get_string_length(str_ptr, &len);
-        char *buff = new char[len + 1]{0};
-        inface.get_string_context(str_ptr, buff, len + 1);
-        std::cout << "latest_version: " << buff << std::endl;
-        delete[] buff;
-    }
+    versions = inface.to_string(str_ptr);
+    std::cout << "online_version: " << versions << std::endl;
 
     auto init_impl_res = inface.auto_init_impl();
     std::cout << "init_res: " << init_impl_res << std::endl;
@@ -90,7 +71,7 @@ int main()
         std::cout << "init failed: " << inface.get_error_define(init_impl_res) << std::endl;
         return 0;
     }
-    char module_buff[1024] = {0};
+    char module_buff[1024] = { 0 };
     auto module_res = inface.GetCoreModulePath(module_buff, 1024);
     if (module_res)
     {
@@ -100,7 +81,7 @@ int main()
     {
         std::cout << "GetCoreModulePath failed: " << inface.get_error_define(module_res) << std::endl;
     }
-    char version_buff[1024] = {0};
+    char version_buff[1024] = { 0 };
     auto version_res = inface.GetCompileVersion(version_buff, 1024);
     if (version_res)
     {
@@ -119,12 +100,12 @@ int main()
         if (get_transform_of_map_res == 0)
         {
             auto error = inface.GetLastErr();
-            char buff[1024] = {0};
+            char buff[1024] = { 0 };
             inface.GetLastErrMsg(buff, 1024);
             std::cout << "get_transform_of_map failed: " << error << " " << buff << std::endl;
         }
     }
-    catch (const std::exception &e)
+    catch (const std::exception& e)
     {
         std::cout << "exception: " << e.what() << std::endl;
     }
@@ -133,12 +114,12 @@ int main()
         std::cout << "unknown exception" << std::endl;
     }
 
-    auto init_res = inface.init();
+    auto init_res = inface.InitResource();
     std::cout << "init_res: " << init_res << std::endl;
     if (init_res != 0)
     {
         auto error = inface.GetLastErr();
-        char buff[1024] = {0};
+        char buff[1024] = { 0 };
         inface.GetLastErrMsg(buff, 1024);
         std::cout << "init failed: " << error << " " << buff << std::endl;
         return 0;
