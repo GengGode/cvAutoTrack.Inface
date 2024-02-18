@@ -58,7 +58,6 @@ typedef double &double_ref;
         return func(maroc_for_each(only_name, __VA_ARGS__));               \
     }
 
-bool bind_call(verison, char_ptr versionBuff);
 bool bind_call(init);
 bool bind_call(uninit);
 bool bind_call(startServe);

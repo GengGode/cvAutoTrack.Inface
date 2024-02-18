@@ -62,11 +62,6 @@ extern "C"
     CVAUTOTRACE_INFACE_API bool api(const char *json, inface_string_ptr result);
 
     /****************************************************************************************************/
-#if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-    __declspec(deprecated("** this is a deprecated function, your should used GetCompileVersion**")) extern "C" bool CVAUTOTRACE_INFACE_API verison(char *versionBuff);
-#else
-__attribute__((deprecated("** this is a deprecated function, your should used GetCompileVersion**"))) extern "C" bool CVAUTOTRACE_INFACE_API verison(char *versionBuff);
-#endif
     bool CVAUTOTRACE_INFACE_API init();
     bool CVAUTOTRACE_INFACE_API uninit();
 
@@ -159,7 +154,6 @@ typedef bool (*install_task_callback_t)(const char *task_name, int (*callback)(c
 typedef bool (*remove_task_callback_t)(const char *task_name);
 
 /****************************************************************************************************/
-typedef bool (*verison_t)(char *versionBuff);
 typedef bool (*init_t)();
 typedef bool (*uninit_t)();
 typedef bool (*startServe_t)();
@@ -222,7 +216,6 @@ struct inface
     remove_task_callback_t remove_task_callback_func;
 
     /****************************************************************************************************/
-    verison_t verison_func;
     init_t init_func;
     uninit_t uninit_func;
     startServe_t startServe_func;
@@ -286,7 +279,6 @@ struct inface
         install_task_callback_func = (install_task_callback_t)get_proc(lib, "install_task_callback");
         remove_task_callback_func = (remove_task_callback_t)get_proc(lib, "remove_task_callback");
         /****************************************************************************************************/
-        verison_func = (verison_t)get_proc(lib, "verison");
         init_func = (init_t)get_proc(lib, "init");
         uninit_func = (uninit_t)get_proc(lib, "uninit");
         startServe_func = (startServe_t)get_proc(lib, "startServe");
@@ -445,13 +437,6 @@ struct inface
     }
 
     /****************************************************************************************************/
-
-    bool verison(char *versionBuff)
-    {
-        if (verison_func == nullptr)
-            return false;
-        return verison_func(versionBuff);
-    }
     bool init()
     {
         if (init_func == nullptr)
