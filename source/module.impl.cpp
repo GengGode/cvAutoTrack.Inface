@@ -1,10 +1,11 @@
 #include "cvAutoTrack.Inface.h"
-#include "string.match.h"
-#include "Inface.regerr.h"
+
 #include "Inface.define.h"
 #include "Inface.library.h"
 #include "Inface.network.h"
 #include "Inface.powershell.h"
+#include "Inface.regerr.h"
+#include "string.match.h"
 
 int load_impl_and_deps()
 {
@@ -21,7 +22,7 @@ bool check_impl_valid()
 {
     auto cvat_file = get_value("加载目录", "库文件名");
 
-    FILE *fp = fopen(cvat_file.c_str(), "rb");
+    FILE* fp = fopen(cvat_file.c_str(), "rb");
     if (fp == nullptr)
         return false;
     fclose(fp);
@@ -52,7 +53,7 @@ bool check_is_need_update()
     return download_version > local_version;
 }
 
-bool check_file_hash(const std::string &file, const std::string &hash)
+bool check_file_hash(const std::string& file, const std::string& hash)
 {
     auto hash_res = get_file_hash(file);
     if (hash_res != hash)
@@ -60,7 +61,7 @@ bool check_file_hash(const std::string &file, const std::string &hash)
     return true;
 }
 
-int download_core(version_info &info)
+int download_core(version_info& info)
 {
     auto url_file_name = info.url.substr(info.url.find_last_of('/') + 1);
     auto cvat_cache_file = get_value("下载目录") + url_file_name;
@@ -76,21 +77,21 @@ int download_core(version_info &info)
         return error("解压cvAutoTrack.zip失败");
 
     auto cvat_file = get_value("加载目录", "库文件名");
-    FILE *fp = fopen(cvat_file.c_str(), "rb");
+    FILE* fp = fopen(cvat_file.c_str(), "rb");
     if (fp == nullptr)
         return error("没有找到cvAutoTrack.dll");
     fclose(fp);
     return 0;
 }
 
-int auto_init_impl_v7(version_info &info)
+int auto_init_impl_v7(version_info& info)
 {
     return_if_err(download_core(info));
 
     return load_impl_and_deps();
 }
 
-int auto_init_impl_v8(version_info &info)
+int auto_init_impl_v8(version_info& info)
 {
     return_if_err(download_core(info));
 
@@ -141,7 +142,7 @@ int auto_init_impl_v8(version_info &info)
     return load_impl_and_deps();
 }
 
-int get_latest_version(version_info &info)
+int get_latest_version(version_info& info)
 {
     std::string download_url;
     auto download_url_res = get_response(get_value("项目链接") + "/downloadUrl", download_url);
@@ -176,13 +177,9 @@ int auto_init_impl()
 
     switch (parse_major_version(info.version))
     {
-    case 6:
-        return error("不支持旧版本的cvAutoTrack.dll");
-    case 7:
-        return auto_init_impl_v7(info);
-    case 8:
-        return auto_init_impl_v8(info);
-    default:
-        return error("不支持的cvAutoTrack.dll版本");
+        case 6: return error("不支持旧版本的cvAutoTrack.dll");
+        case 7: return auto_init_impl_v7(info);
+        case 8: return auto_init_impl_v8(info);
+        default: return error("不支持的cvAutoTrack.dll版本");
     }
 }
