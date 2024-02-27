@@ -17,7 +17,11 @@ inline static std::map<std::string, std::function<int(std::string)>> inface_task
     {"download_progress", nullptr},
     {"download_failed", nullptr},
     {"download_success", nullptr}};
-// value map
+class inface{
+public:
+inline static std::map<std::string, std::function<int(int,int,std::string)>> progress_map = {
+    {"download_progress", nullptr}};
+};
 inline static std::map<std::string, std::string> inface_value_map = {
     {"下载目录", "cache/"},
     {"加载目录", "core/"},

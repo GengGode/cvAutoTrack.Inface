@@ -140,6 +140,12 @@ extern "C"
     // remove callback
     CVAUTOTRACE_INFACE_API int remove_task_callback(const char* task_name);
 
+    CVAUTOTRACE_INFACE_API int get_progress_callback_count();
+    CVAUTOTRACE_INFACE_API int get_progress_callback_name(int index, inface_string_ptr result);
+    CVAUTOTRACE_INFACE_API int install_progress_callback(const char* progress_name, int (*callback)(int /*current*/, int /*total*/, const char* /*msg*/));
+    CVAUTOTRACE_INFACE_API int remove_progress_callback(const char* progress_name);
+    
+
     // proxy for cvAutoTrace.dll
     CVAUTOTRACE_INFACE_API bool api(const char* json, inface_string_ptr result);
 
@@ -199,8 +205,10 @@ extern "C"
 // #else // explicit_link
 
 typedef int (*json_callback_ptr)(const char* /*json*/);
+typedef int (*progress_callback_ptr)(int /*current*/, int /*total*/, const char* /*msg*/);
 
     #define type_null_json_callback_ptr
+    #define type_null_progress_callback_ptr
     #define type_null_inface_string_ptr
     #define ret_inface_string_ptr_false nullptr
 
@@ -228,6 +236,10 @@ struct inface
     bind_call(int, get_task_callback_name, int index, inface_string_ptr result);
     bind_call(int, install_task_callback, const_char_ptr task_name, json_callback_ptr callback);
     bind_call(int, remove_task_callback, const_char_ptr task_name);
+    bind_call(int, get_progress_callback_count);
+    bind_call(int, get_progress_callback_name, int index, inface_string_ptr result);
+    bind_call(int, install_progress_callback, const_char_ptr progress_name, progress_callback_ptr callback);
+    bind_call(int, remove_progress_callback, const_char_ptr progress_name);
     bind_call(bool, api, const_char_ptr json, inface_string_ptr result);
 
     /****************************************************************************************************/

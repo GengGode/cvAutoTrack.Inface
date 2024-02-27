@@ -16,6 +16,7 @@ PRIVATE
         module.impl.cpp
         module.string.cpp
         module.task.cpp
+        module.progress.cpp
         module.online.cpp
         module.version.cpp
         impl/impl.api.cpp
