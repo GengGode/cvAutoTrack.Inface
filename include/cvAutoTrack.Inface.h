@@ -128,6 +128,11 @@ extern "C"
     CVAUTOTRACE_INFACE_API int get_online_core_version_info(const char* version, inface_string_ptr result);
     CVAUTOTRACE_INFACE_API int get_local_core_version_list(inface_string_ptr result);
 
+    CVAUTOTRACE_INFACE_API int checkout_online_core_latest_version(inface_string_ptr result);
+    CVAUTOTRACE_INFACE_API int checkout_online_core(const char* version, inface_string_ptr result);
+    CVAUTOTRACE_INFACE_API int checkout_local_core(const char* version, inface_string_ptr result);
+    CVAUTOTRACE_INFACE_API int release_context_core();
+
     // inface version info
     CVAUTOTRACE_INFACE_API int get_inface_version(inface_string_ptr result);
 
@@ -231,6 +236,10 @@ struct inface
     bind_call(int, get_online_core_version_list, inface_string_ptr result);
     bind_call(int, get_online_core_version_info, const_char_ptr version, inface_string_ptr result);
     bind_call(int, get_local_core_version_list, inface_string_ptr result);
+    bind_call(int, checkout_online_core_latest_version, inface_string_ptr result);
+    bind_call(int, checkout_online_core, const_char_ptr version, inface_string_ptr result);
+    bind_call(int, checkout_local_core, const_char_ptr version, inface_string_ptr result);
+    bind_call(int, release_context_core);
     bind_call(int, get_inface_version, inface_string_ptr result);
     bind_call(int, get_task_callback_count);
     bind_call(int, get_task_callback_name, int index, inface_string_ptr result);

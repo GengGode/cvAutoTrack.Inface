@@ -12,7 +12,6 @@ target_sources(cvAutoTrack.Inface
 INTERFACE
         ${inface_INCLUDE_DIR}/cvAutoTrack.Inface.h
 PRIVATE
-        module.api.cpp
         module.error.cpp
         module.impl.cpp
         module.string.cpp
@@ -20,6 +19,7 @@ PRIVATE
         module.progress.cpp
         module.online.cpp
         module.version.cpp
+        module.api.cpp
         impl/impl.api.cpp
 )
 

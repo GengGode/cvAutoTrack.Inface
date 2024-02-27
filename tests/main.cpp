@@ -73,6 +73,15 @@ int main()
 
     inface.api("test download_progress", nullptr);
 
+    auto str_ptr = inface.alloc_string();
+    inface.get_local_core_version_list(str_ptr);
+    auto versions = inface.to_string(str_ptr);
+    std::cout << "local_version: " << versions << std::endl;
+    
+    inface.set_string_context(str_ptr, "", 1);
+    inface.get_online_core_version_list(str_ptr);
+    versions = inface.to_string(str_ptr);
+    std::cout << "online_version: " << versions << std::endl;
 
     auto init_impl_res = inface.auto_init_impl();
     std::cout << "init_res: " << init_impl_res << std::endl;
