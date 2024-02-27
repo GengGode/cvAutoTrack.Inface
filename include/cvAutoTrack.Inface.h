@@ -297,6 +297,14 @@ struct inface
         auto get_task_callback_name_res = get_task_callback_name(index, alloc_res);
         return to_string(alloc_res);
     }
+
+    std::string get_progress_callback_name(int index)
+    {
+        int len = 0;
+        auto alloc_res = alloc_string();
+        auto get_progress_callback_name_res = get_progress_callback_name(index, alloc_res);
+        return to_string(alloc_res);
+    }
 };
 
 #endif // explicit_link

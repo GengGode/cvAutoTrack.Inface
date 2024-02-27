@@ -39,6 +39,19 @@ void show(inface& inface)
     {
         std::cout << "task_callback[" << i << "]: " << inface.get_task_callback_name(i) << std::endl;
     }
+    int progress_callback_count = inface.get_progress_callback_count();
+    std::cout << "progress_callback_count: " << progress_callback_count << std::endl;
+    for (int i = 0; i < progress_callback_count; i++)
+    {
+        std::cout << "progress_callback[" << i << "]: " << inface.get_progress_callback_name(i) << std::endl;
+    }
+}
+
+int progress(int current, int total,const char* msg)
+{
+    float percent = (float)current / total;
+    std::cout << "progress: " << current << "/" << total << " " << percent * 100 << "%" << " " << msg << std::endl;
+    return 0;
 }
 
 int main()
@@ -54,15 +67,12 @@ int main()
         std::cout << "inface version: " << version << std::endl;
     }
 
-    auto str_ptr = inface.alloc_string();
-    inface.get_local_core_version_list(str_ptr);
-    auto versions = inface.to_string(str_ptr);
-    std::cout << "local_version: " << versions << std::endl;
+    show(inface);
 
-    inface.set_string_context(str_ptr, "", 1);
-    inface.get_online_core_version_list(str_ptr);
-    versions = inface.to_string(str_ptr);
-    std::cout << "online_version: " << versions << std::endl;
+    inface.install_progress_callback("download_progress", progress);
+
+    inface.api("test download_progress", nullptr);
+
 
     auto init_impl_res = inface.auto_init_impl();
     std::cout << "init_res: " << init_impl_res << std::endl;
