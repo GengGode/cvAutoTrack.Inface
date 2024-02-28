@@ -58,7 +58,7 @@ inline bool download_file(const std::string& url, const std::string& path, std::
     auto vaild_url = server_ssl_vaild() ? url : add_skip_ssl_param(url); // to_unvaild_ssl_url(url);
 
     auto file_size = 0;
-    auto command = "curl -I " + vaild_url;
+    auto command = "curl -L -I " + vaild_url;
     auto res = get_command_result(command);
     auto pos = res.find("Content-Length: ");
     if (pos != std::string::npos)
