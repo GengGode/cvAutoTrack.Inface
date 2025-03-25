@@ -47,6 +47,11 @@ typedef double &double_ref;
 #define type_null_long_long_int
 #define type_null_const_char_ptr
 #define type_null_char_ptr
+
+#define type_null_cvatv1_ptr
+
+#define ret_cvatv1_ptr_false nullptr
+typedef cvAutoTrackContextV1Ptr cvatv1_ptr;
 #define only_name(v, n) \
     type_null_##v comma_##n()
 #define bind_call(name, ...)                                               \
@@ -57,7 +62,25 @@ typedef double &double_ref;
             return false;                                                  \
         return func(maroc_for_each(only_name, __VA_ARGS__));               \
     }
+#define ret_bind_call(ret_type, name, ...)                                 \
+    ret_type name(__VA_ARGS__)                                             \
+    {                                                                      \
+        auto func = (decltype(&name))get_proc(get_global_handle(), #name); \
+        if (func == nullptr)                                               \
+            return ret_##ret_type##_false;                                 \
+        return func(maroc_for_each(only_name, __VA_ARGS__));               \
+    }
+#define void_bind_call(name, ...)                                          \
+    void name(__VA_ARGS__)                                                 \
+    {                                                                      \
+        auto func = (decltype(&name))get_proc(get_global_handle(), #name); \
+        if (func == nullptr)                                               \
+            return;                                                        \
+        return func(maroc_for_each(only_name, __VA_ARGS__));               \
+    }
 
+ret_bind_call(cvatv1_ptr, create_cvAutoTrack_context_v1);
+void_bind_call(destroy_cvAutoTrack_context_v1, cvatv1_ptr context);
 bool bind_call(init);
 bool bind_call(uninit);
 bool bind_call(startServe);
