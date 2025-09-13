@@ -95,6 +95,9 @@ int auto_init_impl_v8(version_info& info)
 {
     return_if_err(download_core(info));
 
+    std::function<int(int,int,std::string)> download_progress =inface::progress_map["download_progress"];
+    int current_progress = 0;
+
     std::string download_depends;
     auto download_depends_res = get_response(get_value("依赖链接"), download_depends);
     if (!download_depends_res)
@@ -113,17 +116,18 @@ int auto_init_impl_v8(version_info& info)
         auto cache_depend_file = get_value("下载目录") + depend_file;
         auto deps_file = get_value("依赖目录") + depend_origin_file_name;
 
-        debug_print("depend_file: %s\n", depend_file.c_str());
-        debug_print("depend_hash: %s\n", depend_hash.c_str());
-        debug_print("depend_url: %s\n", depend_url.c_str());
-        debug_print("depend_origin_file_hash: %s\n", depend_origin_file_hash.c_str());
-        debug_print("depend_origin_file_name: %s\n", depend_origin_file_name.c_str());
-        debug_print("cache_depend_file: %s\n", cache_depend_file.c_str());
-        debug_print("deps_file: %s\n", deps_file.c_str());
+        //debug_print("depend_file: %s\n", depend_file.c_str());
+        //debug_print("depend_hash: %s\n", depend_hash.c_str());
+        //debug_print("depend_url: %s\n", depend_url.c_str());
+        //debug_print("depend_origin_file_hash: %s\n", depend_origin_file_hash.c_str());
+        //debug_print("depend_origin_file_name: %s\n", depend_origin_file_name.c_str());
+        //debug_print("cache_depend_file: %s\n", cache_depend_file.c_str());
+        //debug_print("deps_file: %s\n", deps_file.c_str());
 
         if (check_file_hash(deps_file, depend_origin_file_hash))
         {
             debug_print("deps_file skip download: %s\n", deps_file.c_str());
+            current_progress++;
             continue;
         }
 
@@ -137,9 +141,25 @@ int auto_init_impl_v8(version_info& info)
         auto unzip_res = unzip_file(cache_depend_file, deps_dir);
         if (!unzip_res)
             return error("解压依赖文件失败");
+
+        if(download_progress != nullptr)
+        {
+            current_progress++;
+            download_progress(current_progress, depends.size(), depend_origin_file_name);
+        }
     }
 
     return load_impl_and_deps();
+}
+
+int checkout_online_version(std::string& version)
+{
+    std::string download_version;
+    auto download_version_res = get_response(get_value("项目链接") + "/LatestVersion", download_version);
+    if (!download_version_res)
+        return error("获取cvAutoTrack.dll版本失败");
+    version = download_version;
+    return 0;
 }
 
 int get_latest_version(version_info& info)
