@@ -95,6 +95,9 @@ int auto_init_impl_v8(version_info& info)
 {
     return_if_err(download_core(info));
 
+    std::function<int(int,int,std::string)> download_progress =inface::progress_map["download_progress"];
+    int current_progress = 0;
+
     std::string download_depends;
     auto download_depends_res = get_response(get_value("依赖链接"), download_depends);
     if (!download_depends_res)
@@ -124,6 +127,7 @@ int auto_init_impl_v8(version_info& info)
         if (check_file_hash(deps_file, depend_origin_file_hash))
         {
             debug_print("deps_file skip download: %s\n", deps_file.c_str());
+            current_progress++;
             continue;
         }
 
@@ -137,6 +141,12 @@ int auto_init_impl_v8(version_info& info)
         auto unzip_res = unzip_file(cache_depend_file, deps_dir);
         if (!unzip_res)
             return error("解压依赖文件失败");
+            
+        if(download_progress != nullptr)
+        {
+            current_progress++;
+            download_progress(current_progress, depends.size(), depend_origin_file_name);
+        }
     }
 
     return load_impl_and_deps();
