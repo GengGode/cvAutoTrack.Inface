@@ -59,6 +59,7 @@
     #define type_null_const_char_ptr
     #define type_null_char_ptr
     #define type_null_int_ptr
+    #define type_null_cvatv1_ptr
     #define only_name(v, n) type_null_##v comma_##n()
     #define bind_call(ret_type, name, ...)                       \
         ret_type name(__VA_ARGS__)                               \
@@ -101,6 +102,8 @@ typedef double& double_ref;
 extern "C"
 {
 #endif
+
+    struct context;
 
     // string alloc
     struct inface_string;
@@ -149,11 +152,91 @@ extern "C"
     CVAUTOTRACE_INFACE_API int get_progress_callback_name(int index, inface_string_ptr result);
     CVAUTOTRACE_INFACE_API int install_progress_callback(const char* progress_name, int (*callback)(int /*current*/, int /*total*/, const char* /*msg*/));
     CVAUTOTRACE_INFACE_API int remove_progress_callback(const char* progress_name);
-    
 
     // proxy for cvAutoTrace.dll
     CVAUTOTRACE_INFACE_API bool api(const char* json, inface_string_ptr result);
 
+    /* v1 */
+
+    // 定义上下文结构体
+    struct cvAutoTrackContextV1
+    {
+        // 开发保留接口
+        bool (*DebugLoadMapImagePath)(const char* path);
+
+        // 资源管理接口
+        bool (*InitResource)();
+        bool (*UnInitResource)();
+
+        // 缓存配置接口
+        bool (*SetCacheConfig)(const char*, const char*, const char*, int);
+        bool (*SetCoreCachePath)(const char*);
+        bool (*GetCoreCachePath)(char*, int);
+
+        // 服务控制接口
+        bool (*StartServer)();
+        bool (*StopServer)();
+        bool (*SetServerInterval)(int);
+        bool (*SetServerCallback)(void (*)(const char*, int));
+
+        // 日志配置接口
+        bool (*SetDisableFileLog)();
+        bool (*SetEnableFileLog)();
+        bool (*SetLogFilePath)(const char*);
+        bool (*SetLogFileName)(const char*);
+
+        // 截图模式配置接口
+        bool (*SetUseBitbltCaptureMode)();
+        bool (*SetUseGraphicsCaptureMode)();
+        bool (*SetUseDwmCaptureMode)();
+        bool (*SetUseLocalPictureMode)();
+        bool (*SetUseLocalVideoMode)();
+
+        // 采集相关接口
+        bool (*SetCaptureHandle)(long long);
+        bool (*SetCaptureHandleCallback)(long long (*)());
+        bool (*SetScreenSourceCallback)(void (*)(const char*, int&));
+        bool (*SetScreenSourceCallbackEx)(void (*)(const char*, int&, int&, int&));
+        bool (*SetScreenSourceImage)(const char*, int);
+        bool (*SetScreenSourceImageEx)(const char*, int, int, int);
+        bool (*SetScreenClientRectCallback)(void (*)(int&, int&, int&, int&));
+
+        // 跟踪缓存接口
+        bool (*SetTrackCachePath)(const char*);
+        bool (*SetTrackCacheName)(const char*);
+
+        // 坐标配置接口
+        bool (*SetWorldCenter)(double, double);
+        bool (*SetWorldScale)(double);
+
+        // 数据获取接口
+        bool (*GetTransformOfMap)(double&, double&, double&, int&);
+        bool (*GetPositionOfMap)(double&, double&, int&);
+        bool (*GetDirection)(double&);
+        bool (*GetRotation)(double&);
+        bool (*GetUID)(int&);
+        bool (*GetAllInfo)(double&, double&, int&, double&, double&, int&);
+
+        // 调试接口
+        bool (*DebugCapture)();
+        bool (*DebugCapturePath)(const char*);
+
+        // 错误处理接口
+        int (*GetLastErr)();
+        int (*GetLastErrMsg)(char*, int);
+        int (*GetLastErrJson)(char*, int);
+
+        // 版本信息接口
+        bool (*GetCompileVersion)(char*, int);
+        bool (*GetCompileTime)(char*, int);
+        bool (*GetCoreModulePath)(char*, int);
+    };
+    typedef struct cvAutoTrackContextV1* cvAutoTrackContextV1Ptr;
+
+    // 定义上下文初始化函数
+    CVAUTOTRACE_INFACE_API cvAutoTrackContextV1* create_cvAutoTrack_context_v1();
+    // 定义上下文销毁函数
+    CVAUTOTRACE_INFACE_API void destroy_cvAutoTrack_context_v1(cvAutoTrackContextV1* context);
     /****************************************************************************************************/
     bool CVAUTOTRACE_INFACE_API InitResource();
     bool CVAUTOTRACE_INFACE_API UnInitResource();
@@ -216,6 +299,8 @@ typedef int (*progress_callback_ptr)(int /*current*/, int /*total*/, const char*
     #define type_null_progress_callback_ptr
     #define type_null_inface_string_ptr
     #define ret_inface_string_ptr_false nullptr
+    #define ret_cvatv1_ptr_false nullptr
+typedef cvAutoTrackContextV1Ptr cvatv1_ptr;
 
 struct inface
 {
@@ -251,6 +336,9 @@ struct inface
     bind_call(int, remove_progress_callback, const_char_ptr progress_name);
     bind_call(bool, api, const_char_ptr json, inface_string_ptr result);
 
+    /****************************************************************************************************/
+    bind_call(cvatv1_ptr, create_cvAutoTrack_context_v1);
+    bind_call(void, destroy_cvAutoTrack_context_v1, cvatv1_ptr context);
     /****************************************************************************************************/
     bind_call(bool, InitResource);
     bind_call(bool, UnInitResource);

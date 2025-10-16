@@ -47,7 +47,7 @@ void show(inface& inface)
     }
 }
 
-int progress(int current, int total,const char* msg)
+int progress(int current, int total, const char* msg)
 {
     float percent = (float)current / total;
     std::cout << "progress: " << current << "/" << total << " " << percent * 100 << "%" << " " << msg << std::endl;
@@ -67,21 +67,21 @@ int main()
         std::cout << "inface version: " << version << std::endl;
     }
 
-    show(inface);
+    //show(inface);
 
-    inface.install_progress_callback("download_progress", progress);
+    //inface.install_progress_callback("download_progress", progress);
 
-    inface.api("test download_progress", nullptr);
+    //// inface.api("test download_progress", nullptr);
 
-    auto str_ptr = inface.alloc_string();
-    inface.get_local_core_version_list(str_ptr);
-    auto versions = inface.to_string(str_ptr);
-    std::cout << "local_version: " << versions << std::endl;
-    
-    inface.set_string_context(str_ptr, "", 1);
-    inface.get_online_core_version_list(str_ptr);
-    versions = inface.to_string(str_ptr);
-    std::cout << "online_version: " << versions << std::endl;
+    //auto str_ptr = inface.alloc_string();
+    //inface.get_local_core_version_list(str_ptr);
+    //auto versions = inface.to_string(str_ptr);
+    //std::cout << "local_version: " << versions << std::endl;
+
+    //inface.set_string_context(str_ptr, "", 1);
+    //inface.get_online_core_version_list(str_ptr);
+    //versions = inface.to_string(str_ptr);
+    //std::cout << "online_version: " << versions << std::endl;
 
     auto init_impl_res = inface.auto_init_impl();
     std::cout << "init_res: " << init_impl_res << std::endl;
@@ -90,6 +90,21 @@ int main()
         std::cout << "init failed: " << inface.get_error_define(init_impl_res) << std::endl;
         return 0;
     }
+    //auto context = inface.create_cvAutoTrack_context_v1();
+
+    ////auto checkout_impl_res = inface.checkout_online_core("8.2.16", str_ptr);
+    ////std::cout << "checkout_res: " << checkout_impl_res << std::endl;
+    ////if (checkout_impl_res != 0)
+    ////{
+    ////    auto res = inface.to_string(str_ptr);
+    ////    std::cout << "checkout failed: " << inface.get_error_define(checkout_impl_res) << res << std::endl;
+    ////    return 0;
+    ////}
+
+    //inface.destroy_cvAutoTrack_context_v1(context);
+
+
+
     char module_buff[1024] = { 0 };
     auto module_res = inface.GetCoreModulePath(module_buff, 1024);
     if (module_res)
